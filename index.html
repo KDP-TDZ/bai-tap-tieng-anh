@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Trắc Nghiệm Tiếng Anh</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== MÀN HÌNH LOGIN ===== -->
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="login-icon">🎯</div>
+        <h1 class="login-title">&lt;ENG_TEST /&gt;</h1>
+        <p class="login-subtitle">Nhập tên của bạn để bắt đầu</p>
+        <div class="login-input-group">
+            <input type="text" id="usernameInput" placeholder="Nhập tên của bạn..." maxlength="30">
+            <button onclick="enterQuiz()">▶ VÀO BÀI</button>
+        </div>
+        <div id="loginError" class="login-error"></div>
+        <div class="login-footer"><span class="login-hint">✨ Nhấn Enter để bắt đầu</span></div>
+    </div>
+</div>
+
+<!-- ===== NỘI DUNG BÀI TẬP ===== -->
+<div id="quizContent" style="display:none;">
+
+    <div class="quiz-header">
+        <div class="user-badge">
+            <span class="user-avatar">👤</span>
+            <span class="user-name" id="displayName">User</span>
+            <span class="user-status" id="userStatus">🟢 Online</span>
+        </div>
+        <div class="header-actions">
+            <button onclick="toggleCamera()" class="btn-camera" id="cameraBtn">📷 Bật Camera</button>
+            <button onclick="logout()" class="btn-logout">🚪 Thoát</button>
+        </div>
+    </div>
+
+    <div id="cameraContainer" style="display:none;" class="camera-container">
+        <video id="video" autoplay muted></video>
+        <button onclick="toggleCamera()" class="btn-close-camera">✕ Tắt Camera</button>
+    </div>
+
+    <h1>BÀI TẬP TRẮC NGHIỆM TỪ VỰNG TIẾNG ANH</h1>
+    <p class="description">Hãy chọn đáp án đúng nhất cho tất cả 38 từ vựng bên dưới, sau đó nhấn <b>"Nộp Bài & Xem Kết Quả"</b> để kiểm tra điểm số.</p>
+    <hr>
+
+    <form id="quizForm">
+
+        <!-- ===== CÂU 1 ===== -->
+        <fieldset id="group_1">
+            <legend><b>Câu 1:</b> Từ "<b>noodles</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q1" value="0"> <b>A.</b> mì, bún, phở</label><br>
+            <label><input type="radio" name="q1" value="1"> <b>B.</b> kẹo</label><br>
+            <label><input type="radio" name="q1" value="2"> <b>C.</b> nước táo/cam ép</label><br>
+            <label><input type="radio" name="q1" value="3"> <b>D.</b> mì ý</label><br>
+            <div id="feedback_1"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 2 ===== -->
+        <fieldset id="group_2">
+            <legend><b>Câu 2:</b> Từ "<b>hamburger / burger</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q2" value="0"> <b>A.</b> bánh quy</label><br>
+            <label><input type="radio" name="q2" value="1"> <b>B.</b> nước táo/cam ép</label><br>
+            <label><input type="radio" name="q2" value="2"> <b>C.</b> nước ngọt</label><br>
+            <label><input type="radio" name="q2" value="3"> <b>D.</b> hamburger</label><br>
+            <div id="feedback_2"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 3 ===== -->
+        <fieldset id="group_3">
+            <legend><b>Câu 3:</b> Từ "<b>pasta</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q3" value="0"> <b>A.</b> mì, bún, phở</label><br>
+            <label><input type="radio" name="q3" value="1"> <b>B.</b> nước ngọt</label><br>
+            <label><input type="radio" name="q3" value="2"> <b>C.</b> nước táo/cam ép</label><br>
+            <label><input type="radio" name="q3" value="3"> <b>D.</b> mì ý</label><br>
+            <div id="feedback_3"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 4 ===== -->
+        <fieldset id="group_4">
+            <legend><b>Câu 4:</b> Từ "<b>coke</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q4" value="0"> <b>A.</b> bánh quy</label><br>
+            <label><input type="radio" name="q4" value="1"> <b>B.</b> hamburger</label><br>
+            <label><input type="radio" name="q4" value="2"> <b>C.</b> nước ngọt</label><br>
+            <label><input type="radio" name="q4" value="3"> <b>D.</b> mì ý</label><br>
+            <div id="feedback_4"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 5 ===== -->
+        <fieldset id="group_5">
+            <legend><b>Câu 5:</b> Từ "<b>apple/orange juice</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q5" value="0"> <b>A.</b> mì ý</label><br>
+            <label><input type="radio" name="q5" value="1"> <b>B.</b> hamburger</label><br>
+            <label><input type="radio" name="q5" value="2"> <b>C.</b> nước táo/cam ép</label><br>
+            <label><input type="radio" name="q5" value="3"> <b>D.</b> kẹo</label><br>
+            <div id="feedback_5"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 6 ===== -->
+        <fieldset id="group_6">
+            <legend><b>Câu 6:</b> Từ "<b>sweet/candy</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q6" value="0"> <b>A.</b> nước ngọt</label><br>
+            <label><input type="radio" name="q6" value="1"> <b>B.</b> nước táo/cam ép</label><br>
+            <label><input type="radio" name="q6" value="2"> <b>C.</b> kẹo</label><br>
+            <label><input type="radio" name="q6" value="3"> <b>D.</b> mì ý</label><br>
+            <div id="feedback_6"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 7 ===== -->
+        <fieldset id="group_7">
+            <legend><b>Câu 7:</b> Từ "<b>biscuit/cookie</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q7" value="0"> <b>A.</b> nước ngọt</label><br>
+            <label><input type="radio" name="q7" value="1"> <b>B.</b> bánh quy</label><br>
+            <label><input type="radio" name="q7" value="2"> <b>C.</b> mì, bún, phở</label><br>
+            <label><input type="radio" name="q7" value="3"> <b>D.</b> hamburger</label><br>
+            <div id="feedback_7"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 8 ===== -->
+        <fieldset id="group_8">
+            <legend><b>Câu 8:</b> Từ "<b>the first</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q8" value="0"> <b>A.</b> thứ tám (ngày 8) 8th</label><br>
+            <label><input type="radio" name="q8" value="1"> <b>B.</b> thứ hai mươi tám (ngày 28) 28th</label><br>
+            <label><input type="radio" name="q8" value="2"> <b>C.</b> thứ bảy (ngày 7) 7th</label><br>
+            <label><input type="radio" name="q8" value="3"> <b>D.</b> thứ nhất (ngày 1) 1st</label><br>
+            <div id="feedback_8"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 9 ===== -->
+        <fieldset id="group_9">
+            <legend><b>Câu 9:</b> Từ "<b>the second</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q9" value="0"> <b>A.</b> thứ mười sáu (ngày 16) 16th</label><br>
+            <label><input type="radio" name="q9" value="1"> <b>B.</b> thứ hai mươi bảy (ngày 27) 27th</label><br>
+            <label><input type="radio" name="q9" value="2"> <b>C.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q9" value="3"> <b>D.</b> thứ hai mươi hai (ngày 22) 22nd</label><br>
+            <div id="feedback_9"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 10 ===== -->
+        <fieldset id="group_10">
+            <legend><b>Câu 10:</b> Từ "<b>the third</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q10" value="0"> <b>A.</b> thứ ba (ngày 3) 3rd</label><br>
+            <label><input type="radio" name="q10" value="1"> <b>B.</b> thứ hai mươi mốt (ngày 21) 21st</label><br>
+            <label><input type="radio" name="q10" value="2"> <b>C.</b> thứ hai mươi tư (ngày 24) 24th</label><br>
+            <label><input type="radio" name="q10" value="3"> <b>D.</b> thứ chín (ngày 9) 9th</label><br>
+            <div id="feedback_10"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 11 ===== -->
+        <fieldset id="group_11">
+            <legend><b>Câu 11:</b> Từ "<b>the fourth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q11" value="0"> <b>A.</b> thứ tư (ngày 4) 4th</label><br>
+            <label><input type="radio" name="q11" value="1"> <b>B.</b> thứ mười hai (ngày 12) 12th</label><br>
+            <label><input type="radio" name="q11" value="2"> <b>C.</b> thứ mười tám (ngày 18) 18th</label><br>
+            <label><input type="radio" name="q11" value="3"> <b>D.</b> thứ hai mươi ba (ngày 23) 23rd</label><br>
+            <div id="feedback_11"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 12 ===== -->
+        <fieldset id="group_12">
+            <legend><b>Câu 12:</b> Từ "<b>the fifth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q12" value="0"> <b>A.</b> thứ hai mươi tám (ngày 28) 28th</label><br>
+            <label><input type="radio" name="q12" value="1"> <b>B.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q12" value="2"> <b>C.</b> thứ hai mươi sáu (ngày 26) 26th</label><br>
+            <label><input type="radio" name="q12" value="3"> <b>D.</b> thứ năm (ngày 5) 5th</label><br>
+            <div id="feedback_12"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 13 ===== -->
+        <fieldset id="group_13">
+            <legend><b>Câu 13:</b> Từ "<b>the sixth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q13" value="0"> <b>A.</b> thứ sáu (ngày 6) 6th</label><br>
+            <label><input type="radio" name="q13" value="1"> <b>B.</b> thứ mười (ngày 10) 10th</label><br>
+            <label><input type="radio" name="q13" value="2"> <b>C.</b> thứ chín (ngày 9) 9th</label><br>
+            <label><input type="radio" name="q13" value="3"> <b>D.</b> thứ hai mươi chín (ngày 29) 29th</label><br>
+            <div id="feedback_13"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 14 ===== -->
+        <fieldset id="group_14">
+            <legend><b>Câu 14:</b> Từ "<b>the seventh</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q14" value="0"> <b>A.</b> thứ hai mươi (ngày 20) 20th</label><br>
+            <label><input type="radio" name="q14" value="1"> <b>B.</b> thứ mười (ngày 10) 10th</label><br>
+            <label><input type="radio" name="q14" value="2"> <b>C.</b> thứ bảy (ngày 7) 7th</label><br>
+            <label><input type="radio" name="q14" value="3"> <b>D.</b> thứ ba mươi (ngày 30) 30th</label><br>
+            <div id="feedback_14"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 15 ===== -->
+        <fieldset id="group_15">
+            <legend><b>Câu 15:</b> Từ "<b>the eighth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q15" value="0"> <b>A.</b> thứ sáu (ngày 6) 6th</label><br>
+            <label><input type="radio" name="q15" value="1"> <b>B.</b> thứ tám (ngày 8) 8th</label><br>
+            <label><input type="radio" name="q15" value="2"> <b>C.</b> thứ hai mươi sáu (ngày 26) 26th</label><br>
+            <label><input type="radio" name="q15" value="3"> <b>D.</b> thứ hai (ngày 2) 2nd</label><br>
+            <div id="feedback_15"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 16 ===== -->
+        <fieldset id="group_16">
+            <legend><b>Câu 16:</b> Từ "<b>the ninth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q16" value="0"> <b>A.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q16" value="1"> <b>B.</b> thứ chín (ngày 9) 9th</label><br>
+            <label><input type="radio" name="q16" value="2"> <b>C.</b> thứ hai mươi bảy (ngày 27) 27th</label><br>
+            <label><input type="radio" name="q16" value="3"> <b>D.</b> thứ hai mươi tư (ngày 24) 24th</label><br>
+            <div id="feedback_16"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 17 ===== -->
+        <fieldset id="group_17">
+            <legend><b>Câu 17:</b> Từ "<b>the tenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q17" value="0"> <b>A.</b> thứ mười (ngày 10) 10th</label><br>
+            <label><input type="radio" name="q17" value="1"> <b>B.</b> thứ hai mươi lăm (ngày 25) 25th</label><br>
+            <label><input type="radio" name="q17" value="2"> <b>C.</b> thứ hai mươi hai (ngày 22) 22nd</label><br>
+            <label><input type="radio" name="q17" value="3"> <b>D.</b> thứ hai mươi bảy (ngày 27) 27th</label><br>
+            <div id="feedback_17"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 18 ===== -->
+        <fieldset id="group_18">
+            <legend><b>Câu 18:</b> Từ "<b>the eleventh</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q18" value="0"> <b>A.</b> thứ nhất (ngày 1) 1st</label><br>
+            <label><input type="radio" name="q18" value="1"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label><br>
+            <label><input type="radio" name="q18" value="2"> <b>C.</b> thứ mười một (ngày 11) 11th</label><br>
+            <label><input type="radio" name="q18" value="3"> <b>D.</b> thứ tư (ngày 4) 4th</label><br>
+            <div id="feedback_18"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 19 ===== -->
+        <fieldset id="group_19">
+            <legend><b>Câu 19:</b> Từ "<b>the twelfth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q19" value="0"> <b>A.</b> thứ hai mươi mốt (ngày 21) 21st</label><br>
+            <label><input type="radio" name="q19" value="1"> <b>B.</b> thứ bảy (ngày 7) 7th</label><br>
+            <label><input type="radio" name="q19" value="2"> <b>C.</b> thứ hai mươi lăm (ngày 25) 25th</label><br>
+            <label><input type="radio" name="q19" value="3"> <b>D.</b> thứ mười hai (ngày 12) 12th</label><br>
+            <div id="feedback_19"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 20 ===== -->
+        <fieldset id="group_20">
+            <legend><b>Câu 20:</b> Từ "<b>the thirteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q20" value="0"> <b>A.</b> thứ mười ba (ngày 13) 13th</label><br>
+            <label><input type="radio" name="q20" value="1"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label><br>
+            <label><input type="radio" name="q20" value="2"> <b>C.</b> thứ hai mươi ba (ngày 23) 23rd</label><br>
+            <label><input type="radio" name="q20" value="3"> <b>D.</b> thứ mười bốn (ngày 14) 14th</label><br>
+            <div id="feedback_20"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 21 ===== -->
+        <fieldset id="group_21">
+            <legend><b>Câu 21:</b> Từ "<b>the fourteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q21" value="0"> <b>A.</b> thứ ba mươi mốt (ngày 31) 31st</label><br>
+            <label><input type="radio" name="q21" value="1"> <b>B.</b> thứ mười chín (ngày 19) 19th</label><br>
+            <label><input type="radio" name="q21" value="2"> <b>C.</b> thứ mười bốn (ngày 14) 14th</label><br>
+            <label><input type="radio" name="q21" value="3"> <b>D.</b> thứ hai (ngày 2) 2nd</label><br>
+            <div id="feedback_21"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 22 ===== -->
+        <fieldset id="group_22">
+            <legend><b>Câu 22:</b> Từ "<b>the fifteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q22" value="0"> <b>A.</b> thứ hai mươi bảy (ngày 27) 27th</label><br>
+            <label><input type="radio" name="q22" value="1"> <b>B.</b> thứ mười bảy (ngày 17) 17th</label><br>
+            <label><input type="radio" name="q22" value="2"> <b>C.</b> thứ hai mươi chín (ngày 29) 29th</label><br>
+            <label><input type="radio" name="q22" value="3"> <b>D.</b> thứ mười lăm (ngày 15) 15th</label><br>
+            <div id="feedback_22"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 23 ===== -->
+        <fieldset id="group_23">
+            <legend><b>Câu 23:</b> Từ "<b>the sixteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q23" value="0"> <b>A.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q23" value="1"> <b>B.</b> thứ tư (ngày 4) 4th</label><br>
+            <label><input type="radio" name="q23" value="2"> <b>C.</b> thứ mười sáu (ngày 16) 16th</label><br>
+            <label><input type="radio" name="q23" value="3"> <b>D.</b> thứ sáu (ngày 6) 6th</label><br>
+            <div id="feedback_23"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 24 ===== -->
+        <fieldset id="group_24">
+            <legend><b>Câu 24:</b> Từ "<b>the seventeenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q24" value="0"> <b>A.</b> thứ chín (ngày 9) 9th</label><br>
+            <label><input type="radio" name="q24" value="1"> <b>B.</b> thứ tư (ngày 4) 4th</label><br>
+            <label><input type="radio" name="q24" value="2"> <b>C.</b> thứ mười bảy (ngày 17) 17th</label><br>
+            <label><input type="radio" name="q24" value="3"> <b>D.</b> thứ ba (ngày 3) 3rd</label><br>
+            <div id="feedback_24"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 25 ===== -->
+        <fieldset id="group_25">
+            <legend><b>Câu 25:</b> Từ "<b>the eighteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q25" value="0"> <b>A.</b> thứ mười sáu (ngày 16) 16th</label><br>
+            <label><input type="radio" name="q25" value="1"> <b>B.</b> thứ mười tám (ngày 18) 18th</label><br>
+            <label><input type="radio" name="q25" value="2"> <b>C.</b> thứ mười lăm (ngày 15) 15th</label><br>
+            <label><input type="radio" name="q25" value="3"> <b>D.</b> thứ mười một (ngày 11) 11th</label><br>
+            <div id="feedback_25"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 26 ===== -->
+        <fieldset id="group_26">
+            <legend><b>Câu 26:</b> Từ "<b>the nineteenth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q26" value="0"> <b>A.</b> thứ hai mươi chín (ngày 29) 29th</label><br>
+            <label><input type="radio" name="q26" value="1"> <b>B.</b> thứ mười chín (ngày 19) 19th</label><br>
+            <label><input type="radio" name="q26" value="2"> <b>C.</b> thứ hai mươi mốt (ngày 21) 21st</label><br>
+            <label><input type="radio" name="q26" value="3"> <b>D.</b> thứ hai mươi (ngày 20) 20th</label><br>
+            <div id="feedback_26"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 27 ===== -->
+        <fieldset id="group_27">
+            <legend><b>Câu 27:</b> Từ "<b>the twentieth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q27" value="0"> <b>A.</b> thứ mười bốn (ngày 14) 14th</label><br>
+            <label><input type="radio" name="q27" value="1"> <b>B.</b> thứ hai mươi tám (ngày 28) 28th</label><br>
+            <label><input type="radio" name="q27" value="2"> <b>C.</b> thứ bảy (ngày 7) 7th</label><br>
+            <label><input type="radio" name="q27" value="3"> <b>D.</b> thứ hai mươi (ngày 20) 20th</label><br>
+            <div id="feedback_27"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 28 ===== -->
+        <fieldset id="group_28">
+            <legend><b>Câu 28:</b> Từ "<b>the twenty-first</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q28" value="0"> <b>A.</b> thứ mười ba (ngày 13) 13th</label><br>
+            <label><input type="radio" name="q28" value="1"> <b>B.</b> thứ hai mươi chín (ngày 29) 29th</label><br>
+            <label><input type="radio" name="q28" value="2"> <b>C.</b> thứ chín (ngày 9) 9th</label><br>
+            <label><input type="radio" name="q28" value="3"> <b>D.</b> thứ hai mươi mốt (ngày 21) 21st</label><br>
+            <div id="feedback_28"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 29 ===== -->
+        <fieldset id="group_29">
+            <legend><b>Câu 29:</b> Từ "<b>the twenty-second</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q29" value="0"> <b>A.</b> thứ chín (ngày 9) 9th</label><br>
+            <label><input type="radio" name="q29" value="1"> <b>B.</b> thứ mười ba (ngày 13) 13th</label><br>
+            <label><input type="radio" name="q29" value="2"> <b>C.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q29" value="3"> <b>D.</b> thứ hai mươi hai (ngày 22) 22nd</label><br>
+            <div id="feedback_29"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 30 ===== -->
+        <fieldset id="group_30">
+            <legend><b>Câu 30:</b> Từ "<b>the twenty-third</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q30" value="0"> <b>A.</b> thứ nhất (ngày 1) 1st</label><br>
+            <label><input type="radio" name="q30" value="1"> <b>B.</b> thứ hai (ngày 2) 2nd</label><br>
+            <label><input type="radio" name="q30" value="2"> <b>C.</b> thứ hai mươi ba (ngày 23) 23rd</label><br>
+            <label><input type="radio" name="q30" value="3"> <b>D.</b> thứ ba mươi mốt (ngày 31) 31st</label><br>
+            <div id="feedback_30"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 31 ===== -->
+        <fieldset id="group_31">
+            <legend><b>Câu 31:</b> Từ "<b>the twenty-fourth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q31" value="0"> <b>A.</b> thứ hai mươi mốt (ngày 21) 21st</label><br>
+            <label><input type="radio" name="q31" value="1"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label><br>
+            <label><input type="radio" name="q31" value="2"> <b>C.</b> thứ ba (ngày 3) 3rd</label><br>
+            <label><input type="radio" name="q31" value="3"> <b>D.</b> thứ nhất (ngày 1) 1st</label><br>
+            <div id="feedback_31"></div>
+        </fieldset>
+
+        <!-- ===== CÂU 32 ===== -->
+        <fieldset id="group_32">
+            <legend><b>Câu 32:</b> Từ "<b>the twenty-fifth</b>" có nghĩa là gì?</legend>
+            <label><input type="radio" name="q32" value="0"> <b>A.</b> thứ hai mươi lăm (ngày 25) 25th</label><br>
+            <label><input type="radio" name="q
