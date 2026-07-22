@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Tương Tác Tiếng Anh</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 Bài Tập Tiếng Anh</h1>
+    <p class="subtitle">Chủ đề: Số thứ tự &amp; Ăn uống</p>
+    <div class="instruction">
+        ⚠️ Chú ý: Các câu hỏi đã được đảo lộn ngẫu nhiên. Sau khi làm xong một câu, hãy bấm "Lưu câu trả lời". Câu đó sẽ bị khóa và ẩn đáp án. Khi làm xong toàn bộ, bấm "Nộp Bài" để tải file kết quả về máy!
+    </div>
+    
+    <div id="quiz-container">
+        <!-- Câu hỏi sẽ được Javascript render tại đây -->
+    </div>
+
+    <button id="btn-finish" class="btn-submit" onclick="finishAndDownload()">📤 Nộp Bài &amp; Tải File Kết Quả</button>
+    
+    <!-- Nút Reset (tùy chọn) -->
+    <button onclick="resetAll()" class="btn-reset">🔄 Làm lại từ đầu (Xóa tiến độ)</button>
+
+    <div id="result-message">
+        🎉 Đã nộp bài thành công! File kết quả đã được tải về máy của bạn.
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
