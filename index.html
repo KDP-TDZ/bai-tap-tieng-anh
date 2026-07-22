@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài Tập Trắc Nghiệm Từ Vựng Tiếng Anh</title>
+    <title>Bài Tập Nghe Tiếng Anh - Chọn Từ Đúng</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -77,10 +77,40 @@
             font-weight: 600;
             color: #2c3e50;
             padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         legend b {
             color: #e74c3c;
+        }
+
+        .btn-play {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-play:hover {
+            background: #2980b9;
+        }
+
+        .btn-play:active {
+            transform: scale(0.95);
+        }
+
+        .btn-play.playing {
+            background: #e74c3c;
         }
 
         label {
@@ -226,14 +256,15 @@
             .container { padding: 16px; }
             fieldset { padding: 12px 14px; }
             .btn-submit, .btn-reset, .btn-clear { width: 100%; }
+            legend { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📚 BÀI TẬP TRẮC NGHIỆM TỪ VỰNG TIẾNG ANH</h1>
-    <p class="subtitle">Chủ đề: Đồ ăn, thức uống &amp; Số thứ tự</p>
+    <h1>🎧 BÀI TẬP NGHE TIẾNG ANH</h1>
+    <p class="subtitle">Nghe từ vựng và chọn đáp án đúng</p>
 
     <div id="savedNotice" class="saved-notice">
         💾 Đã khôi phục bài làm trước đó của bạn!
@@ -242,7 +273,7 @@
     <hr>
 
     <div class="progress-info">
-        ✅ Hãy chọn đáp án đúng nhất cho tất cả <b>38 câu</b> bên dưới, sau đó nhấn <b>"Nộp Bài & Xem Kết Quả"</b>.
+        🎯 Bấm nút <b>"🔊 Nghe"</b> để nghe từ vựng tiếng Anh, sau đó chọn nghĩa đúng.
         <br>
         <span style="color:#7f8c8d;font-size:0.9rem;">💾 Bài làm của bạn sẽ tự động được lưu khi bạn chọn đáp án.</span>
     </div>
@@ -251,7 +282,10 @@
 
         <!-- ===== CÂU 1 ===== -->
         <fieldset id="group_1">
-            <legend><b>Câu 1:</b> Từ "<b>noodles</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 1:</b>
+                <button type="button" class="btn-play" onclick="speakWord('noodles', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q1" value="0" onchange="saveProgress()"> <b>A.</b> mì, bún, phở</label>
             <label><input type="radio" name="q1" value="1" onchange="saveProgress()"> <b>B.</b> kẹo</label>
             <label><input type="radio" name="q1" value="2" onchange="saveProgress()"> <b>C.</b> nước táo/cam ép</label>
@@ -261,7 +295,10 @@
 
         <!-- ===== CÂU 2 ===== -->
         <fieldset id="group_2">
-            <legend><b>Câu 2:</b> Từ "<b>hamburger / burger</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 2:</b>
+                <button type="button" class="btn-play" onclick="speakWord('hamburger', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q2" value="0" onchange="saveProgress()"> <b>A.</b> bánh quy</label>
             <label><input type="radio" name="q2" value="1" onchange="saveProgress()"> <b>B.</b> nước táo/cam ép</label>
             <label><input type="radio" name="q2" value="2" onchange="saveProgress()"> <b>C.</b> nước ngọt</label>
@@ -271,7 +308,10 @@
 
         <!-- ===== CÂU 3 ===== -->
         <fieldset id="group_3">
-            <legend><b>Câu 3:</b> Từ "<b>pasta</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 3:</b>
+                <button type="button" class="btn-play" onclick="speakWord('pasta', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q3" value="0" onchange="saveProgress()"> <b>A.</b> mì, bún, phở</label>
             <label><input type="radio" name="q3" value="1" onchange="saveProgress()"> <b>B.</b> nước ngọt</label>
             <label><input type="radio" name="q3" value="2" onchange="saveProgress()"> <b>C.</b> nước táo/cam ép</label>
@@ -281,7 +321,10 @@
 
         <!-- ===== CÂU 4 ===== -->
         <fieldset id="group_4">
-            <legend><b>Câu 4:</b> Từ "<b>coke</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 4:</b>
+                <button type="button" class="btn-play" onclick="speakWord('coke', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q4" value="0" onchange="saveProgress()"> <b>A.</b> bánh quy</label>
             <label><input type="radio" name="q4" value="1" onchange="saveProgress()"> <b>B.</b> hamburger</label>
             <label><input type="radio" name="q4" value="2" onchange="saveProgress()"> <b>C.</b> nước ngọt</label>
@@ -291,7 +334,10 @@
 
         <!-- ===== CÂU 5 ===== -->
         <fieldset id="group_5">
-            <legend><b>Câu 5:</b> Từ "<b>apple/orange juice</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 5:</b>
+                <button type="button" class="btn-play" onclick="speakWord('apple juice', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q5" value="0" onchange="saveProgress()"> <b>A.</b> mì ý</label>
             <label><input type="radio" name="q5" value="1" onchange="saveProgress()"> <b>B.</b> hamburger</label>
             <label><input type="radio" name="q5" value="2" onchange="saveProgress()"> <b>C.</b> nước táo/cam ép</label>
@@ -301,7 +347,10 @@
 
         <!-- ===== CÂU 6 ===== -->
         <fieldset id="group_6">
-            <legend><b>Câu 6:</b> Từ "<b>sweet/candy</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 6:</b>
+                <button type="button" class="btn-play" onclick="speakWord('candy', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q6" value="0" onchange="saveProgress()"> <b>A.</b> nước ngọt</label>
             <label><input type="radio" name="q6" value="1" onchange="saveProgress()"> <b>B.</b> nước táo/cam ép</label>
             <label><input type="radio" name="q6" value="2" onchange="saveProgress()"> <b>C.</b> kẹo</label>
@@ -311,7 +360,10 @@
 
         <!-- ===== CÂU 7 ===== -->
         <fieldset id="group_7">
-            <legend><b>Câu 7:</b> Từ "<b>biscuit/cookie</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 7:</b>
+                <button type="button" class="btn-play" onclick="speakWord('biscuit', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q7" value="0" onchange="saveProgress()"> <b>A.</b> nước ngọt</label>
             <label><input type="radio" name="q7" value="1" onchange="saveProgress()"> <b>B.</b> bánh quy</label>
             <label><input type="radio" name="q7" value="2" onchange="saveProgress()"> <b>C.</b> mì, bún, phở</label>
@@ -321,7 +373,10 @@
 
         <!-- ===== CÂU 8 ===== -->
         <fieldset id="group_8">
-            <legend><b>Câu 8:</b> Từ "<b>the first</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 8:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the first', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q8" value="0" onchange="saveProgress()"> <b>A.</b> thứ tám (ngày 8) 8th</label>
             <label><input type="radio" name="q8" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tám (ngày 28) 28th</label>
             <label><input type="radio" name="q8" value="2" onchange="saveProgress()"> <b>C.</b> thứ bảy (ngày 7) 7th</label>
@@ -331,7 +386,10 @@
 
         <!-- ===== CÂU 9 ===== -->
         <fieldset id="group_9">
-            <legend><b>Câu 9:</b> Từ "<b>the second</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 9:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the second', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q9" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười sáu (ngày 16) 16th</label>
             <label><input type="radio" name="q9" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi bảy (ngày 27) 27th</label>
             <label><input type="radio" name="q9" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai (ngày 2) 2nd</label>
@@ -341,7 +399,10 @@
 
         <!-- ===== CÂU 10 ===== -->
         <fieldset id="group_10">
-            <legend><b>Câu 10:</b> Từ "<b>the third</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 10:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the third', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q10" value="0" onchange="saveProgress()"> <b>A.</b> thứ ba (ngày 3) 3rd</label>
             <label><input type="radio" name="q10" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi mốt (ngày 21) 21st</label>
             <label><input type="radio" name="q10" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi tư (ngày 24) 24th</label>
@@ -351,7 +412,10 @@
 
         <!-- ===== CÂU 11 ===== -->
         <fieldset id="group_11">
-            <legend><b>Câu 11:</b> Từ "<b>the fourth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 11:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the fourth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q11" value="0" onchange="saveProgress()"> <b>A.</b> thứ tư (ngày 4) 4th</label>
             <label><input type="radio" name="q11" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười hai (ngày 12) 12th</label>
             <label><input type="radio" name="q11" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười tám (ngày 18) 18th</label>
@@ -361,7 +425,10 @@
 
         <!-- ===== CÂU 12 ===== -->
         <fieldset id="group_12">
-            <legend><b>Câu 12:</b> Từ "<b>the fifth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 12:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the fifth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q12" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi tám (ngày 28) 28th</label>
             <label><input type="radio" name="q12" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai (ngày 2) 2nd</label>
             <label><input type="radio" name="q12" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi sáu (ngày 26) 26th</label>
@@ -371,7 +438,10 @@
 
         <!-- ===== CÂU 13 ===== -->
         <fieldset id="group_13">
-            <legend><b>Câu 13:</b> Từ "<b>the sixth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 13:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the sixth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q13" value="0" onchange="saveProgress()"> <b>A.</b> thứ sáu (ngày 6) 6th</label>
             <label><input type="radio" name="q13" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười (ngày 10) 10th</label>
             <label><input type="radio" name="q13" value="2" onchange="saveProgress()"> <b>C.</b> thứ chín (ngày 9) 9th</label>
@@ -381,7 +451,10 @@
 
         <!-- ===== CÂU 14 ===== -->
         <fieldset id="group_14">
-            <legend><b>Câu 14:</b> Từ "<b>the seventh</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 14:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the seventh', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q14" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi (ngày 20) 20th</label>
             <label><input type="radio" name="q14" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười (ngày 10) 10th</label>
             <label><input type="radio" name="q14" value="2" onchange="saveProgress()"> <b>C.</b> thứ bảy (ngày 7) 7th</label>
@@ -391,7 +464,10 @@
 
         <!-- ===== CÂU 15 ===== -->
         <fieldset id="group_15">
-            <legend><b>Câu 15:</b> Từ "<b>the eighth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 15:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the eighth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q15" value="0" onchange="saveProgress()"> <b>A.</b> thứ sáu (ngày 6) 6th</label>
             <label><input type="radio" name="q15" value="1" onchange="saveProgress()"> <b>B.</b> thứ tám (ngày 8) 8th</label>
             <label><input type="radio" name="q15" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi sáu (ngày 26) 26th</label>
@@ -401,7 +477,10 @@
 
         <!-- ===== CÂU 16 ===== -->
         <fieldset id="group_16">
-            <legend><b>Câu 16:</b> Từ "<b>the ninth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 16:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the ninth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q16" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai (ngày 2) 2nd</label>
             <label><input type="radio" name="q16" value="1" onchange="saveProgress()"> <b>B.</b> thứ chín (ngày 9) 9th</label>
             <label><input type="radio" name="q16" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi bảy (ngày 27) 27th</label>
@@ -411,7 +490,10 @@
 
         <!-- ===== CÂU 17 ===== -->
         <fieldset id="group_17">
-            <legend><b>Câu 17:</b> Từ "<b>the tenth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 17:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the tenth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q17" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười (ngày 10) 10th</label>
             <label><input type="radio" name="q17" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi lăm (ngày 25) 25th</label>
             <label><input type="radio" name="q17" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi hai (ngày 22) 22nd</label>
@@ -421,7 +503,10 @@
 
         <!-- ===== CÂU 18 ===== -->
         <fieldset id="group_18">
-            <legend><b>Câu 18:</b> Từ "<b>the eleventh</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 18:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the eleventh', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q18" value="0" onchange="saveProgress()"> <b>A.</b> thứ nhất (ngày 1) 1st</label>
             <label><input type="radio" name="q18" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label>
             <label><input type="radio" name="q18" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười một (ngày 11) 11th</label>
@@ -431,7 +516,10 @@
 
         <!-- ===== CÂU 19 ===== -->
         <fieldset id="group_19">
-            <legend><b>Câu 19:</b> Từ "<b>the twelfth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 19:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the twelfth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q19" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi mốt (ngày 21) 21st</label>
             <label><input type="radio" name="q19" value="1" onchange="saveProgress()"> <b>B.</b> thứ bảy (ngày 7) 7th</label>
             <label><input type="radio" name="q19" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi lăm (ngày 25) 25th</label>
@@ -441,7 +529,10 @@
 
         <!-- ===== CÂU 20 ===== -->
         <fieldset id="group_20">
-            <legend><b>Câu 20:</b> Từ "<b>the thirteenth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 20:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the thirteenth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q20" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười ba (ngày 13) 13th</label>
             <label><input type="radio" name="q20" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label>
             <label><input type="radio" name="q20" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi ba (ngày 23) 23rd</label>
@@ -451,7 +542,10 @@
 
         <!-- ===== CÂU 21 ===== -->
         <fieldset id="group_21">
-            <legend><b>Câu 21:</b> Từ "<b>the fourteenth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 21:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the fourteenth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q21" value="0" onchange="saveProgress()"> <b>A.</b> thứ ba mươi mốt (ngày 31) 31st</label>
             <label><input type="radio" name="q21" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười chín (ngày 19) 19th</label>
             <label><input type="radio" name="q21" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười bốn (ngày 14) 14th</label>
@@ -461,7 +555,10 @@
 
         <!-- ===== CÂU 22 ===== -->
         <fieldset id="group_22">
-            <legend><b>Câu 22:</b> Từ "<b>the fifteenth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 22:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the fifteenth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q22" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi bảy (ngày 27) 27th</label>
             <label><input type="radio" name="q22" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười bảy (ngày 17) 17th</label>
             <label><input type="radio" name="q22" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi chín (ngày 29) 29th</label>
@@ -471,7 +568,10 @@
 
         <!-- ===== CÂU 23 ===== -->
         <fieldset id="group_23">
-            <legend><b>Câu 23:</b> Từ "<b>the sixteenth</b>" có nghĩa là gì?</legend>
+            <legend>
+                <b>Câu 23:</b>
+                <button type="button" class="btn-play" onclick="speakWord('the sixteenth', this)">🔊 Nghe</button>
+            </legend>
             <label><input type="radio" name="q23" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai (ngày 2) 2nd</label>
             <label><input type="radio" name="q23" value="1" onchange="saveProgress()"> <b>B.</b> thứ tư (ngày 4) 4th</label>
             <label><input type="radio" name="q23" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười sáu (ngày 16) 16th</label>
@@ -481,357 +581,3 @@
 
         <!-- ===== CÂU 24 ===== -->
         <fieldset id="group_24">
-            <legend><b>Câu 24:</b> Từ "<b>the seventeenth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q24" value="0" onchange="saveProgress()"> <b>A.</b> thứ chín (ngày 9) 9th</label>
-            <label><input type="radio" name="q24" value="1" onchange="saveProgress()"> <b>B.</b> thứ tư (ngày 4) 4th</label>
-            <label><input type="radio" name="q24" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười bảy (ngày 17) 17th</label>
-            <label><input type="radio" name="q24" value="3" onchange="saveProgress()"> <b>D.</b> thứ ba (ngày 3) 3rd</label>
-            <div class="feedback" id="feedback_24"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 25 ===== -->
-        <fieldset id="group_25">
-            <legend><b>Câu 25:</b> Từ "<b>the eighteenth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q25" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười sáu (ngày 16) 16th</label>
-            <label><input type="radio" name="q25" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười tám (ngày 18) 18th</label>
-            <label><input type="radio" name="q25" value="2" onchange="saveProgress()"> <b>C.</b> thứ mười lăm (ngày 15) 15th</label>
-            <label><input type="radio" name="q25" value="3" onchange="saveProgress()"> <b>D.</b> thứ mười một (ngày 11) 11th</label>
-            <div class="feedback" id="feedback_25"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 26 ===== -->
-        <fieldset id="group_26">
-            <legend><b>Câu 26:</b> Từ "<b>the nineteenth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q26" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi chín (ngày 29) 29th</label>
-            <label><input type="radio" name="q26" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười chín (ngày 19) 19th</label>
-            <label><input type="radio" name="q26" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi mốt (ngày 21) 21st</label>
-            <label><input type="radio" name="q26" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi (ngày 20) 20th</label>
-            <div class="feedback" id="feedback_26"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 27 ===== -->
-        <fieldset id="group_27">
-            <legend><b>Câu 27:</b> Từ "<b>the twentieth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q27" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười bốn (ngày 14) 14th</label>
-            <label><input type="radio" name="q27" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tám (ngày 28) 28th</label>
-            <label><input type="radio" name="q27" value="2" onchange="saveProgress()"> <b>C.</b> thứ bảy (ngày 7) 7th</label>
-            <label><input type="radio" name="q27" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi (ngày 20) 20th</label>
-            <div class="feedback" id="feedback_27"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 28 ===== -->
-        <fieldset id="group_28">
-            <legend><b>Câu 28:</b> Từ "<b>the twenty-first</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q28" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười ba (ngày 13) 13th</label>
-            <label><input type="radio" name="q28" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi chín (ngày 29) 29th</label>
-            <label><input type="radio" name="q28" value="2" onchange="saveProgress()"> <b>C.</b> thứ chín (ngày 9) 9th</label>
-            <label><input type="radio" name="q28" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi mốt (ngày 21) 21st</label>
-            <div class="feedback" id="feedback_28"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 29 ===== -->
-        <fieldset id="group_29">
-            <legend><b>Câu 29:</b> Từ "<b>the twenty-second</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q29" value="0" onchange="saveProgress()"> <b>A.</b> thứ chín (ngày 9) 9th</label>
-            <label><input type="radio" name="q29" value="1" onchange="saveProgress()"> <b>B.</b> thứ mười ba (ngày 13) 13th</label>
-            <label><input type="radio" name="q29" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai (ngày 2) 2nd</label>
-            <label><input type="radio" name="q29" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi hai (ngày 22) 22nd</label>
-            <div class="feedback" id="feedback_29"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 30 ===== -->
-        <fieldset id="group_30">
-            <legend><b>Câu 30:</b> Từ "<b>the twenty-third</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q30" value="0" onchange="saveProgress()"> <b>A.</b> thứ nhất (ngày 1) 1st</label>
-            <label><input type="radio" name="q30" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai (ngày 2) 2nd</label>
-            <label><input type="radio" name="q30" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi ba (ngày 23) 23rd</label>
-            <label><input type="radio" name="q30" value="3" onchange="saveProgress()"> <b>D.</b> thứ ba mươi mốt (ngày 31) 31st</label>
-            <div class="feedback" id="feedback_30"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 31 ===== -->
-        <fieldset id="group_31">
-            <legend><b>Câu 31:</b> Từ "<b>the twenty-fourth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q31" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi mốt (ngày 21) 21st</label>
-            <label><input type="radio" name="q31" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label>
-            <label><input type="radio" name="q31" value="2" onchange="saveProgress()"> <b>C.</b> thứ ba (ngày 3) 3rd</label>
-            <label><input type="radio" name="q31" value="3" onchange="saveProgress()"> <b>D.</b> thứ nhất (ngày 1) 1st</label>
-            <div class="feedback" id="feedback_31"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 32 ===== -->
-        <fieldset id="group_32">
-            <legend><b>Câu 32:</b> Từ "<b>the twenty-fifth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q32" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi lăm (ngày 25) 25th</label>
-            <label><input type="radio" name="q32" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tám (ngày 28) 28th</label>
-            <label><input type="radio" name="q32" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi chín (ngày 29) 29th</label>
-            <label><input type="radio" name="q32" value="3" onchange="saveProgress()"> <b>D.</b> thứ ba (ngày 3) 3rd</label>
-            <div class="feedback" id="feedback_32"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 33 ===== -->
-        <fieldset id="group_33">
-            <legend><b>Câu 33:</b> Từ "<b>the twenty-sixth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q33" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi lăm (ngày 25) 25th</label>
-            <label><input type="radio" name="q33" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label>
-            <label><input type="radio" name="q33" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi sáu (ngày 26) 26th</label>
-            <label><input type="radio" name="q33" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai (ngày 2) 2nd</label>
-            <div class="feedback" id="feedback_33"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 34 ===== -->
-        <fieldset id="group_34">
-            <legend><b>Câu 34:</b> Từ "<b>the twenty-seventh</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q34" value="0" onchange="saveProgress()"> <b>A.</b> thứ hai mươi ba (ngày 23) 23rd</label>
-            <label><input type="radio" name="q34" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi bảy (ngày 27) 27th</label>
-            <label><input type="radio" name="q34" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi chín (ngày 29) 29th</label>
-            <label><input type="radio" name="q34" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi (ngày 20) 20th</label>
-            <div class="feedback" id="feedback_34"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 35 ===== -->
-        <fieldset id="group_35">
-            <legend><b>Câu 35:</b> Từ "<b>the twenty-eighth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q35" value="0" onchange="saveProgress()"> <b>A.</b> thứ sáu (ngày 6) 6th</label>
-            <label><input type="radio" name="q35" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi ba (ngày 23) 23rd</label>
-            <label><input type="radio" name="q35" value="2" onchange="saveProgress()"> <b>C.</b> thứ ba mươi (ngày 30) 30th</label>
-            <label><input type="radio" name="q35" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi tám (ngày 28) 28th</label>
-            <div class="feedback" id="feedback_35"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 36 ===== -->
-        <fieldset id="group_36">
-            <legend><b>Câu 36:</b> Từ "<b>the twenty-ninth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q36" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười một (ngày 11) 11th</label>
-            <label><input type="radio" name="q36" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi ba (ngày 23) 23rd</label>
-            <label><input type="radio" name="q36" value="2" onchange="saveProgress()"> <b>C.</b> thứ hai mươi chín (ngày 29) 29th</label>
-            <label><input type="radio" name="q36" value="3" onchange="saveProgress()"> <b>D.</b> thứ mười bảy (ngày 17) 17th</label>
-            <div class="feedback" id="feedback_36"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 37 ===== -->
-        <fieldset id="group_37">
-            <legend><b>Câu 37:</b> Từ "<b>the thirtieth</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q37" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười lăm (ngày 15) 15th</label>
-            <label><input type="radio" name="q37" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi tư (ngày 24) 24th</label>
-            <label><input type="radio" name="q37" value="2" onchange="saveProgress()"> <b>C.</b> thứ ba mươi (ngày 30) 30th</label>
-            <label><input type="radio" name="q37" value="3" onchange="saveProgress()"> <b>D.</b> thứ mười ba (ngày 13) 13th</label>
-            <div class="feedback" id="feedback_37"></div>
-        </fieldset>
-
-        <!-- ===== CÂU 38 ===== -->
-        <fieldset id="group_38">
-            <legend><b>Câu 38:</b> Từ "<b>the thirty-first</b>" có nghĩa là gì?</legend>
-            <label><input type="radio" name="q38" value="0" onchange="saveProgress()"> <b>A.</b> thứ mười chín (ngày 19) 19th</label>
-            <label><input type="radio" name="q38" value="1" onchange="saveProgress()"> <b>B.</b> thứ hai mươi (ngày 20) 20th</label>
-            <label><input type="radio" name="q38" value="2" onchange="saveProgress()"> <b>C.</b> thứ ba mươi mốt (ngày 31) 31st</label>
-            <label><input type="radio" name="q38" value="3" onchange="saveProgress()"> <b>D.</b> thứ hai mươi bảy (ngày 27) 27th</label>
-            <div class="feedback" id="feedback_38"></div>
-        </fieldset>
-
-        <div class="btn-group">
-            <button type="button" class="btn-submit" onclick="checkAnswers()">📤 Nộp Bài & Xem Kết Quả</button>
-            <button type="button" class="btn-reset" onclick="resetForm()">🔄 Làm Lại</button>
-            <button type="button" class="btn-clear" onclick="clearAllData()">🗑️ Xóa Dữ Liệu</button>
-        </div>
-    </form>
-
-    <div id="resultSummary"></div>
-</div>
-
-<script>
-    const answerKey = {
-        "1": {"ans": 0, "letter": "A", "text": "mì, bún, phở"},
-        "2": {"ans": 3, "letter": "D", "text": "hamburger"},
-        "3": {"ans": 3, "letter": "D", "text": "mì ý"},
-        "4": {"ans": 2, "letter": "C", "text": "nước ngọt"},
-        "5": {"ans": 2, "letter": "C", "text": "nước táo/cam ép"},
-        "6": {"ans": 2, "letter": "C", "text": "kẹo"},
-        "7": {"ans": 1, "letter": "B", "text": "bánh quy"},
-        "8": {"ans": 3, "letter": "D", "text": "thứ nhất (ngày 1) 1st"},
-        "9": {"ans": 2, "letter": "C", "text": "thứ hai (ngày 2) 2nd"},
-        "10": {"ans": 0, "letter": "A", "text": "thứ ba (ngày 3) 3rd"},
-        "11": {"ans": 0, "letter": "A", "text": "thứ tư (ngày 4) 4th"},
-        "12": {"ans": 3, "letter": "D", "text": "thứ năm (ngày 5) 5th"},
-        "13": {"ans": 0, "letter": "A", "text": "thứ sáu (ngày 6) 6th"},
-        "14": {"ans": 2, "letter": "C", "text": "thứ bảy (ngày 7) 7th"},
-        "15": {"ans": 1, "letter": "B", "text": "thứ tám (ngày 8) 8th"},
-        "16": {"ans": 1, "letter": "B", "text": "thứ chín (ngày 9) 9th"},
-        "17": {"ans": 0, "letter": "A", "text": "thứ mười (ngày 10) 10th"},
-        "18": {"ans": 2, "letter": "C", "text": "thứ mười một (ngày 11) 11th"},
-        "19": {"ans": 3, "letter": "D", "text": "thứ mười hai (ngày 12) 12th"},
-        "20": {"ans": 0, "letter": "A", "text": "thứ mười ba (ngày 13) 13th"},
-        "21": {"ans": 2, "letter": "C", "text": "thứ mười bốn (ngày 14) 14th"},
-        "22": {"ans": 3, "letter": "D", "text": "thứ mười lăm (ngày 15) 15th"},
-        "23": {"ans": 2, "letter": "C", "text": "thứ mười sáu (ngày 16) 16th"},
-        "24": {"ans": 2, "letter": "C", "text": "thứ mười bảy (ngày 17) 17th"},
-        "25": {"ans": 1, "letter": "B", "text": "thứ mười tám (ngày 18) 18th"},
-        "26": {"ans": 1, "letter": "B", "text": "thứ mười chín (ngày 19) 19th"},
-        "27": {"ans": 3, "letter": "D", "text": "thứ hai mươi (ngày 20) 20th"},
-        "28": {"ans": 3, "letter": "D", "text": "thứ hai mươi mốt (ngày 21) 21st"},
-        "29": {"ans": 3, "letter": "D", "text": "thứ hai mươi hai (ngày 22) 22nd"},
-        "30": {"ans": 2, "letter": "C", "text": "thứ hai mươi ba (ngày 23) 23rd"},
-        "31": {"ans": 1, "letter": "B", "text": "thứ hai mươi tư (ngày 24) 24th"},
-        "32": {"ans": 0, "letter": "A", "text": "thứ hai mươi lăm (ngày 25) 25th"},
-        "33": {"ans": 2, "letter": "C", "text": "thứ hai mươi sáu (ngày 26) 26th"},
-        "34": {"ans": 1, "letter": "B", "text": "thứ hai mươi bảy (ngày 27) 27th"},
-        "35": {"ans": 3, "letter": "D", "text": "thứ hai mươi tám (ngày 28) 28th"},
-        "36": {"ans": 2, "letter": "C", "text": "thứ hai mươi chín (ngày 29) 29th"},
-        "37": {"ans": 2, "letter": "C", "text": "thứ ba mươi (ngày 30) 30th"},
-        "38": {"ans": 2, "letter": "C", "text": "thứ ba mươi mốt (ngày 31) 31st"}
-    };
-    const totalQuestions = 38;
-
-    // ============================================
-    // LƯU BÀI LÀM VÀO LOCALSTORAGE
-    // ============================================
-    function saveProgress() {
-        const answers = {};
-        for (let i = 1; i <= totalQuestions; i++) {
-            const selected = document.querySelector(`input[name="q${i}"]:checked`);
-            answers[`q${i}`] = selected ? selected.value : null;
-            
-            // Đánh dấu câu đã trả lời
-            const group = document.getElementById(`group_${i}`);
-            if (selected) {
-                group.classList.add('answered');
-            } else {
-                group.classList.remove('answered');
-            }
-        }
-        localStorage.setItem('quiz_answers', JSON.stringify(answers));
-        
-        // Hiển thị thông báo đã lưu
-        const notice = document.getElementById('savedNotice');
-        notice.style.display = 'block';
-        notice.textContent = '💾 Đã lưu bài làm!';
-        setTimeout(() => {
-            notice.style.display = 'none';
-        }, 2000);
-    }
-
-    // ============================================
-    // KHÔI PHỤC BÀI LÀM TỪ LOCALSTORAGE
-    // ============================================
-    function loadProgress() {
-        const saved = localStorage.getItem('quiz_answers');
-        if (!saved) return;
-        
-        const answers = JSON.parse(saved);
-        let restoredCount = 0;
-        
-        for (let i = 1; i <= totalQuestions; i++) {
-            const value = answers[`q${i}`];
-            if (value !== null && value !== undefined) {
-                const radio = document.querySelector(`input[name="q${i}"][value="${value}"]`);
-                if (radio) {
-                    radio.checked = true;
-                    restoredCount++;
-                    document.getElementById(`group_${i}`).classList.add('answered');
-                }
-            }
-        }
-        
-        if (restoredCount > 0) {
-            const notice = document.getElementById('savedNotice');
-            notice.style.display = 'block';
-            notice.textContent = `💾 Đã khôi phục ${restoredCount} câu trả lời trước đó của bạn!`;
-            setTimeout(() => {
-                notice.style.display = 'none';
-            }, 3000);
-        }
-    }
-
-    // ============================================
-    // KIỂM TRA BÀI
-    // ============================================
-    function checkAnswers() {
-        let score = 0;
-        let answeredCount = 0;
-
-        for (let i = 1; i <= totalQuestions; i++) {
-            const selected = document.querySelector(`input[name="q${i}"]:checked`);
-            const feedbackDiv = document.getElementById(`feedback_${i}`);
-            const correctInfo = answerKey[i];
-
-            if (selected) {
-                answeredCount++;
-                const userAns = parseInt(selected.value);
-                if (userAns === correctInfo.ans) {
-                    score++;
-                    feedbackDiv.innerHTML = `<span class="correct">✓ Chính xác!</span>`;
-                } else {
-                    feedbackDiv.innerHTML = `<span class="wrong">✗ Chưa chính xác.</span> Đáp án đúng là <b>${correctInfo.letter}</b> (${correctInfo.text})`;
-                }
-            } else {
-                feedbackDiv.innerHTML = `<span class="empty">! Chưa trả lời.</span> Đáp án đúng là <b>${correctInfo.letter}</b> (${correctInfo.text})`;
-            }
-        }
-
-        const resultDiv = document.getElementById('resultSummary');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = `
-            <h2>📊 KẾT QUẢ BÀI LÀM</h2>
-            <p><b>Số câu đã làm:</b> ${answeredCount} / ${totalQuestions}</p>
-            <p><b>Số câu trả lời đúng:</b> <span class="score">${score} / ${totalQuestions}</span> (${Math.round((score/totalQuestions)*100)}%)</p>
-        `;
-    }
-
-    // ============================================
-    // LÀM LẠI (XÓA HẾT LỰA CHỌN + LOCALSTORAGE)
-    // ============================================
-    function resetForm() {
-        if (!confirm('Bạn có chắc muốn làm lại từ đầu? Tiến trình hiện tại sẽ bị mất!')) return;
-        
-        document.getElementById('quizForm').reset();
-        for (let i = 1; i <= totalQuestions; i++) {
-            document.getElementById(`feedback_${i}`).innerHTML = '';
-            document.getElementById(`group_${i}`).classList.remove('answered');
-        }
-        document.getElementById('resultSummary').style.display = 'none';
-        document.getElementById('resultSummary').innerHTML = '';
-        
-        // Xóa dữ liệu đã lưu
-        localStorage.removeItem('quiz_answers');
-        
-        const notice = document.getElementById('savedNotice');
-        notice.style.display = 'block';
-        notice.textContent = '🔄 Đã xóa tất cả dữ liệu!';
-        setTimeout(() => {
-            notice.style.display = 'none';
-        }, 2000);
-    }
-
-    // ============================================
-    // XÓA DỮ LIỆU (GIỮ NGUYÊN BÀI LÀM TRÊN MÀN HÌNH)
-    // ============================================
-    function clearAllData() {
-        if (!confirm('Bạn có chắc muốn xóa dữ liệu đã lưu? Bài làm trên màn hình sẽ vẫn giữ nguyên!')) return;
-        
-        localStorage.removeItem('quiz_answers');
-        
-        const notice = document.getElementById('savedNotice');
-        notice.style.display = 'block';
-        notice.textContent = '🗑️ Đã xóa dữ liệu lưu trữ! (Bài làm trên màn hình vẫn giữ nguyên)';
-        setTimeout(() => {
-            notice.style.display = 'none';
-        }, 3000);
-    }
-
-    // ============================================
-    // TỰ ĐỘNG LƯU KHI NGƯỜI DÙNG RỜI TRANG
-    // ============================================
-    window.addEventListener('beforeunload', function() {
-        saveProgress();
-    });
-
-    // ============================================
-    // KHỞI TẠO: LOAD BÀI LÀM ĐÃ LƯU
-    // ============================================
-    window.onload = function() {
-        loadProgress();
-    };
-</script>
-
-</body>
-</html>
