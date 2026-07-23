@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev-Style English Interactive Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-cyan: #58a6ff;
+            --accent-green: #238636;
+            --accent-green-hover: #2ea043;
+            --accent-purple: #bc8cff;
+            --locked-bg: #090c10;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            color: var(--accent-cyan);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Progress Bar HUD */
+        .hud-container {
+            position: sticky;
+            top: 10px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hud-text {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            background: var(--bg-color);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Question Cards */
+        .q-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .q-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.1);
+        }
+
+        .q-card.locked {
+            background: var(--locked-bg);
+            border-color: var(--border-color);
+            opacity: 0.7;
+            box-shadow: none;
+        }
+
+        .q-card.locked::after {
+            content: "[LOCKED]";
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .q-tag {
+            display: inline-block;
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-cyan);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            border: 1px solid rgba(88, 166, 255, 0.2);
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .highlight {
+            color: var(--accent-green);
+            font-family: 'Fira Code', monospace;
+            background: rgba(35, 134, 54, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Inputs */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        label.radio-label {
+            display: flex;
+            align-items: center;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        label.radio-label:hover {
+            border-color: var(--accent-purple);
+            background: rgba(188, 140, 255, 0.05);
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+            outline: none;
+        }
+
+        input[type="radio"]:checked {
+            border-color: var(--accent-cyan);
+        }
+
+        input[type="radio"]:checked::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            max-width: 400px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: #3b434d;
+        }
+
+        .btn-lock {
+            background-color: transparent;
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-lock:hover {
+            background-color: rgba(88, 166, 255, 0.1);
+        }
+
+        .btn-lock:disabled {
+            background-color: var(--bg-color);
+            border-color: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn-submit-main {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 40px auto;
+            background-color: var(--accent-green);
+            color: #fff;
+            padding: 16px;
+            font-size: 1.1rem;
+            text-align: center;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-submit-main:hover {
+            background-color: var(--accent-green-hover);
+            box-shadow: 0 0 15px rgba(46, 160, 67, 0.4);
+        }
+
+        /* Result Terminal */
+        .terminal {
+            display: none;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Fira Code', monospace;
+            color: #0f0;
+            margin-top: 40px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+        }
+        
+        .terminal-header {
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>&lt;ENG_TEST_ENV /&gt;</h1>
+        <div class="subtitle">Executing build: Vocab_Mix_v2.0 | Total tasks: 164</div>
+
+        <div class="hud-container">
+            <div class="hud-text">STATUS: <span id="status-count">0</span>/164</div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <div class="hud-text">SYS_LOCK</div>
+        </div>
+
+        <form id="quizForm">
+            <div class="q-card" id="q_1" data-type="select" data-answer="the ninth" data-locked="false">
+                <div class="q-tag">#TASK_001</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ chín (ngày 9)':</div>
+                <select id="input_q_1">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-sixth">the twenty-sixth</option>
+                    <option value="the tenth">the tenth</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the ninth">the ninth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_1')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_2" data-type="radio" data-answer="24th" data-locked="false">
+                <div class="q-tag">#TASK_002</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi tư (ngày 24)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_2" value="24st"> 24st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_2" value="24nd"> 24nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_2" value="24th"> 24th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_2" value="24rd"> 24rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_2')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_3" data-type="select" data-answer="the first" data-locked="false">
+                <div class="q-tag">#TASK_003</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ nhất (ngày 1)':</div>
+                <select id="input_q_3">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the first">the first</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the sixth">the sixth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_3')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_4" data-type="radio" data-answer="15th" data-locked="false">
+                <div class="q-tag">#TASK_004</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười lăm (ngày 15)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_4" value="15rd"> 15rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_4" value="15st"> 15st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_4" value="15th"> 15th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_4" value="15nd"> 15nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_4')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_5" data-type="select" data-answer="the twenty-first" data-locked="false">
+                <div class="q-tag">#TASK_005</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi mốt (ngày 21)':</div>
+                <select id="input_q_5">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the third">the third</option>
+                    <option value="the seventeenth">the seventeenth</option>
+                    <option value="the twenty-first">the twenty-first</option>
+                    <option value="the thirty-first">the thirty-first</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_5')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_6" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_006</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the fifth' có nghĩa là 'thứ năm (ngày 5)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_6" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_6" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_6')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_7" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_007</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the fourteenth' có nghĩa là 'thứ mười bốn (ngày 14)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_7" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_7" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_7')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_8" data-type="radio" data-answer="bánh hamburger" data-locked="false">
+                <div class="q-tag">#TASK_008</div>
+                <div class="q-text">Từ <span class='highlight'>'burger'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_8" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_8" value="nước táo ép"> nước táo ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_8" value="bánh hamburger"> bánh hamburger</label>
+                    <label class="radio-label"><input type="radio" name="input_q_8" value="nước cam ép"> nước cam ép</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_8')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_9" data-type="radio" data-answer="29th" data-locked="false">
+                <div class="q-tag">#TASK_009</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi chín (ngày 29)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_9" value="29st"> 29st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_9" value="29rd"> 29rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_9" value="29nd"> 29nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_9" value="29th"> 29th</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_9')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_10" data-type="select" data-answer="the fifth" data-locked="false">
+                <div class="q-tag">#TASK_010</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ năm (ngày 5)':</div>
+                <select id="input_q_10">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the sixth">the sixth</option>
+                    <option value="the fifth">the fifth</option>
+                    <option value="the twenty-sixth">the twenty-sixth</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_10')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_11" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_011</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twentieth' có nghĩa là 'thứ bảy (ngày 7)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_11" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_11" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_11')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_12" data-type="radio" data-answer="nước táo ép" data-locked="false">
+                <div class="q-tag">#TASK_012</div>
+                <div class="q-text">Từ <span class='highlight'>'apple juice'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_12" value="bánh quy"> bánh quy</label>
+                    <label class="radio-label"><input type="radio" name="input_q_12" value="nước táo ép"> nước táo ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_12" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_12" value="mì ý"> mì ý</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_12')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_13" data-type="select" data-answer="the eighth" data-locked="false">
+                <div class="q-tag">#TASK_013</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ tám (ngày 8)':</div>
+                <select id="input_q_13">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the sixth">the sixth</option>
+                    <option value="the twelfth">the twelfth</option>
+                    <option value="the twenty-fifth">the twenty-fifth</option>
+                    <option value="the eighth">the eighth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_13')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_14" data-type="text" data-answer="the twenty-third" data-locked="false">
+                <div class="q-tag">#TASK_014</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '23rd':</div>
+                <input type="text" id="input_q_14" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_14')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_15" data-type="radio" data-answer="kẹo" data-locked="false">
+                <div class="q-tag">#TASK_015</div>
+                <div class="q-text">Từ <span class='highlight'>'sweet'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_15" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_15" value="mì, bún, phở"> mì, bún, phở</label>
+                    <label class="radio-label"><input type="radio" name="input_q_15" value="nước cam ép"> nước cam ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_15" value="nước táo ép"> nước táo ép</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_15')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_16" data-type="select" data-answer="the nineteenth" data-locked="false">
+                <div class="q-tag">#TASK_016</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười chín (ngày 19)':</div>
+                <select id="input_q_16">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the nineteenth">the nineteenth</option>
+                    <option value="the first">the first</option>
+                    <option value="the thirteenth">the thirteenth</option>
+                    <option value="the ninth">the ninth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_16')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_17" data-type="select" data-answer="the fourth" data-locked="false">
+                <div class="q-tag">#TASK_017</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ tư (ngày 4)':</div>
+                <select id="input_q_17">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fourth">the fourth</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the twelfth">the twelfth</option>
+                    <option value="the thirteenth">the thirteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_17')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_18" data-type="select" data-answer="the fifteenth" data-locked="false">
+                <div class="q-tag">#TASK_018</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười lăm (ngày 15)':</div>
+                <select id="input_q_18">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fifteenth">the fifteenth</option>
+                    <option value="the fourteenth">the fourteenth</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                    <option value="the twelfth">the twelfth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_18')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_19" data-type="radio" data-answer="23rd" data-locked="false">
+                <div class="q-tag">#TASK_019</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi ba (ngày 23)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_19" value="23st"> 23st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_19" value="23rd"> 23rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_19" value="23nd"> 23nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_19" value="23th"> 23th</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_19')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_20" data-type="text" data-answer="the eighteenth" data-locked="false">
+                <div class="q-tag">#TASK_020</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '18th':</div>
+                <input type="text" id="input_q_20" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_20')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_21" data-type="text" data-answer="the thirty-first" data-locked="false">
+                <div class="q-tag">#TASK_021</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '31st':</div>
+                <input type="text" id="input_q_21" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_21')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_22" data-type="radio" data-answer="6th" data-locked="false">
+                <div class="q-tag">#TASK_022</div>
+                <div class="q-text">Dạng viết tắt của 'thứ sáu (ngày 6)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_22" value="6th"> 6th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_22" value="6nd"> 6nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_22" value="6st"> 6st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_22" value="6rd"> 6rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_22')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_23" data-type="select" data-answer="the twenty-fourth" data-locked="false">
+                <div class="q-tag">#TASK_023</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi tư (ngày 24)':</div>
+                <select id="input_q_23">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the seventeenth">the seventeenth</option>
+                    <option value="the eighteenth">the eighteenth</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the seventh">the seventh</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_23')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_24" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_024</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the tenth' có nghĩa là 'thứ mười (ngày 10)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_24" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_24" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_24')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_25" data-type="select" data-answer="candy" data-locked="false">
+                <div class="q-tag">#TASK_025</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'kẹo'?</div>
+                <select id="input_q_25">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="noodles">noodles</option>
+                    <option value="burger">burger</option>
+                    <option value="candy">candy</option>
+                    <option value="sweet">sweet</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_25')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_26" data-type="radio" data-answer="12th" data-locked="false">
+                <div class="q-tag">#TASK_026</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười hai (ngày 12)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_26" value="12st"> 12st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_26" value="12rd"> 12rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_26" value="12th"> 12th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_26" value="12nd"> 12nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_26')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_27" data-type="text" data-answer="noodles" data-locked="false">
+                <div class="q-tag">#TASK_027</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'mì, bún, phở'</span></div>
+                <input type="text" id="input_q_27" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_27')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_28" data-type="text" data-answer="the seventh" data-locked="false">
+                <div class="q-tag">#TASK_028</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '7th':</div>
+                <input type="text" id="input_q_28" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_28')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_29" data-type="text" data-answer="the tenth" data-locked="false">
+                <div class="q-tag">#TASK_029</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '10th':</div>
+                <input type="text" id="input_q_29" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_29')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_30" data-type="radio" data-answer="14th" data-locked="false">
+                <div class="q-tag">#TASK_030</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười bốn (ngày 14)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_30" value="14rd"> 14rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_30" value="14th"> 14th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_30" value="14nd"> 14nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_30" value="14st"> 14st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_30')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_31" data-type="select" data-answer="sweet" data-locked="false">
+                <div class="q-tag">#TASK_031</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'kẹo'?</div>
+                <select id="input_q_31">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="noodles">noodles</option>
+                    <option value="sweet">sweet</option>
+                    <option value="candy">candy</option>
+                    <option value="pasta">pasta</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_31')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_32" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_032</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-fourth' có nghĩa là 'thứ hai mươi tư (ngày 24)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_32" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_32" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_32')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_33" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_033</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'burger' dùng để chỉ một loại bánh kẹp thịt."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_33" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_33" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_33')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_34" data-type="radio" data-answer="nước cam ép" data-locked="false">
+                <div class="q-tag">#TASK_034</div>
+                <div class="q-text">Từ <span class='highlight'>'orange juice'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_34" value="mì ý"> mì ý</label>
+                    <label class="radio-label"><input type="radio" name="input_q_34" value="bánh quy"> bánh quy</label>
+                    <label class="radio-label"><input type="radio" name="input_q_34" value="nước cam ép"> nước cam ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_34" value="mì, bún, phở"> mì, bún, phở</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_34')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_35" data-type="select" data-answer="burger" data-locked="false">
+                <div class="q-tag">#TASK_035</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'bánh hamburger'?</div>
+                <select id="input_q_35">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="cookie">cookie</option>
+                    <option value="apple juice">apple juice</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="burger">burger</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_35')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_36" data-type="select" data-answer="the twenty-third" data-locked="false">
+                <div class="q-tag">#TASK_036</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi ba (ngày 23)':</div>
+                <select id="input_q_36">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-third">the twenty-third</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                    <option value="the thirteenth">the thirteenth</option>
+                    <option value="the fifth">the fifth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_36')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_37" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_037</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the second' có nghĩa là 'thứ hai (ngày 2)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_37" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_37" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_37')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_38" data-type="text" data-answer="the twenty-fourth" data-locked="false">
+                <div class="q-tag">#TASK_038</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '24th':</div>
+                <input type="text" id="input_q_38" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_38')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_39" data-type="radio" data-answer="30th" data-locked="false">
+                <div class="q-tag">#TASK_039</div>
+                <div class="q-text">Dạng viết tắt của 'thứ ba mươi (ngày 30)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_39" value="30th"> 30th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_39" value="30nd"> 30nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_39" value="30st"> 30st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_39" value="30rd"> 30rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_39')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_40" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_040</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'biscuit' dùng để chỉ loại bánh nướng nhỏ (phổ biến ở Anh)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_40" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_40" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_40')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_41" data-type="select" data-answer="coke" data-locked="false">
+                <div class="q-tag">#TASK_041</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'nước ngọt'?</div>
+                <select id="input_q_41">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="candy">candy</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="biscuit">biscuit</option>
+                    <option value="coke">coke</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_41')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_42" data-type="text" data-answer="apple juice" data-locked="false">
+                <div class="q-tag">#TASK_042</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'nước táo ép'</span></div>
+                <input type="text" id="input_q_42" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_42')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_43" data-type="radio" data-answer="5th" data-locked="false">
+                <div class="q-tag">#TASK_043</div>
+                <div class="q-text">Dạng viết tắt của 'thứ năm (ngày 5)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_43" value="5th"> 5th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_43" value="5st"> 5st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_43" value="5rd"> 5rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_43" value="5nd"> 5nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_43')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_44" data-type="radio" data-answer="26th" data-locked="false">
+                <div class="q-tag">#TASK_044</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi sáu (ngày 26)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_44" value="26rd"> 26rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_44" value="26nd"> 26nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_44" value="26st"> 26st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_44" value="26th"> 26th</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_44')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_45" data-type="radio" data-answer="4th" data-locked="false">
+                <div class="q-tag">#TASK_045</div>
+                <div class="q-text">Dạng viết tắt của 'thứ tư (ngày 4)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_45" value="4st"> 4st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_45" value="4nd"> 4nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_45" value="4th"> 4th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_45" value="4rd"> 4rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_45')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_46" data-type="radio" data-answer="nước ngọt" data-locked="false">
+                <div class="q-tag">#TASK_046</div>
+                <div class="q-text">Từ <span class='highlight'>'coke'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_46" value="nước ngọt"> nước ngọt</label>
+                    <label class="radio-label"><input type="radio" name="input_q_46" value="nước táo ép"> nước táo ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_46" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_46" value="mì, bún, phở"> mì, bún, phở</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_46')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_47" data-type="radio" data-answer="3rd" data-locked="false">
+                <div class="q-tag">#TASK_047</div>
+                <div class="q-text">Dạng viết tắt của 'thứ ba (ngày 3)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_47" value="3nd"> 3nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_47" value="3rd"> 3rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_47" value="3th"> 3th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_47" value="3st"> 3st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_47')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_48" data-type="select" data-answer="orange juice" data-locked="false">
+                <div class="q-tag">#TASK_048</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'nước cam ép'?</div>
+                <select id="input_q_48">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="cookie">cookie</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="coke">coke</option>
+                    <option value="apple juice">apple juice</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_48')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_49" data-type="text" data-answer="burger" data-locked="false">
+                <div class="q-tag">#TASK_049</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'bánh hamburger'</span></div>
+                <input type="text" id="input_q_49" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_49')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_50" data-type="text" data-answer="the twenty-sixth" data-locked="false">
+                <div class="q-tag">#TASK_050</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '26th':</div>
+                <input type="text" id="input_q_50" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_50')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_51" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_051</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the thirtieth' có nghĩa là 'thứ năm (ngày 5)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_51" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_51" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_51')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_52" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_052</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-seventh' có nghĩa là 'thứ hai mươi bảy (ngày 27)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_52" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_52" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_52')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_53" data-type="radio" data-answer="8th" data-locked="false">
+                <div class="q-tag">#TASK_053</div>
+                <div class="q-text">Dạng viết tắt của 'thứ tám (ngày 8)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_53" value="8nd"> 8nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_53" value="8rd"> 8rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_53" value="8th"> 8th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_53" value="8st"> 8st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_53')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_54" data-type="text" data-answer="the fifteenth" data-locked="false">
+                <div class="q-tag">#TASK_054</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '15th':</div>
+                <input type="text" id="input_q_54" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_54')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_55" data-type="select" data-answer="the twentieth" data-locked="false">
+                <div class="q-tag">#TASK_055</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi (ngày 20)':</div>
+                <select id="input_q_55">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the second">the second</option>
+                    <option value="the nineteenth">the nineteenth</option>
+                    <option value="the twentieth">the twentieth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_55')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_56" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_056</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'apple juice' dùng để chỉ đồ uống làm từ quả táo."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_56" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_56" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_56')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_57" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_057</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the eighth' có nghĩa là 'thứ tám (ngày 8)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_57" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_57" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_57')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_58" data-type="text" data-answer="sweet" data-locked="false">
+                <div class="q-tag">#TASK_058</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'kẹo'</span></div>
+                <input type="text" id="input_q_58" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_58')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_59" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_059</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the fourth' có nghĩa là 'thứ ba mươi (ngày 30)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_59" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_59" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_59')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_60" data-type="select" data-answer="the eighteenth" data-locked="false">
+                <div class="q-tag">#TASK_060</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười tám (ngày 18)':</div>
+                <select id="input_q_60">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the eighteenth">the eighteenth</option>
+                    <option value="the twenty-eighth">the twenty-eighth</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the twenty-fifth">the twenty-fifth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_60')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_61" data-type="text" data-answer="the twenty-eighth" data-locked="false">
+                <div class="q-tag">#TASK_061</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '28th':</div>
+                <input type="text" id="input_q_61" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_61')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_62" data-type="radio" data-answer="13th" data-locked="false">
+                <div class="q-tag">#TASK_062</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười ba (ngày 13)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_62" value="13nd"> 13nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_62" value="13rd"> 13rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_62" value="13st"> 13st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_62" value="13th"> 13th</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_62')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_63" data-type="text" data-answer="the thirtieth" data-locked="false">
+                <div class="q-tag">#TASK_063</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '30th':</div>
+                <input type="text" id="input_q_63" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_63')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_64" data-type="select" data-answer="the sixteenth" data-locked="false">
+                <div class="q-tag">#TASK_064</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười sáu (ngày 16)':</div>
+                <select id="input_q_64">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the eleventh">the eleventh</option>
+                    <option value="the twenty-sixth">the twenty-sixth</option>
+                    <option value="the sixteenth">the sixteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_64')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_65" data-type="radio" data-answer="mì ý" data-locked="false">
+                <div class="q-tag">#TASK_065</div>
+                <div class="q-text">Từ <span class='highlight'>'pasta'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_65" value="nước cam ép"> nước cam ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_65" value="mì, bún, phở"> mì, bún, phở</label>
+                    <label class="radio-label"><input type="radio" name="input_q_65" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_65" value="mì ý"> mì ý</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_65')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_66" data-type="select" data-answer="the second" data-locked="false">
+                <div class="q-tag">#TASK_066</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai (ngày 2)':</div>
+                <select id="input_q_66">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the twenty-sixth">the twenty-sixth</option>
+                    <option value="the twenty-seventh">the twenty-seventh</option>
+                    <option value="the second">the second</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_66')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_67" data-type="radio" data-answer="17th" data-locked="false">
+                <div class="q-tag">#TASK_067</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười bảy (ngày 17)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_67" value="17th"> 17th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_67" value="17st"> 17st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_67" value="17rd"> 17rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_67" value="17nd"> 17nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_67')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_68" data-type="select" data-answer="the thirteenth" data-locked="false">
+                <div class="q-tag">#TASK_068</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười ba (ngày 13)':</div>
+                <select id="input_q_68">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the third">the third</option>
+                    <option value="the twenty-third">the twenty-third</option>
+                    <option value="the twenty-first">the twenty-first</option>
+                    <option value="the thirteenth">the thirteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_68')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_69" data-type="text" data-answer="the eighth" data-locked="false">
+                <div class="q-tag">#TASK_069</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '8th':</div>
+                <input type="text" id="input_q_69" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_69')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_70" data-type="text" data-answer="the twelfth" data-locked="false">
+                <div class="q-tag">#TASK_070</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '12th':</div>
+                <input type="text" id="input_q_70" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_70')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_71" data-type="radio" data-answer="28th" data-locked="false">
+                <div class="q-tag">#TASK_071</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi tám (ngày 28)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_71" value="28th"> 28th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_71" value="28rd"> 28rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_71" value="28st"> 28st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_71" value="28nd"> 28nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_71')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_72" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_072</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twelfth' có nghĩa là 'thứ ba mươi (ngày 30)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_72" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_72" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_72')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_73" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_073</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'pasta' dùng để chỉ đồ ăn có sợi như bún, phở."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_73" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_73" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_73')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_74" data-type="radio" data-answer="7th" data-locked="false">
+                <div class="q-tag">#TASK_074</div>
+                <div class="q-text">Dạng viết tắt của 'thứ bảy (ngày 7)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_74" value="7th"> 7th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_74" value="7nd"> 7nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_74" value="7st"> 7st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_74" value="7rd"> 7rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_74')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_75" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_075</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the first' có nghĩa là 'thứ nhất (ngày 1)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_75" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_75" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_75')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_76" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_076</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-third' có nghĩa là 'thứ hai mươi ba (ngày 23)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_76" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_76" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_76')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_77" data-type="text" data-answer="the nineteenth" data-locked="false">
+                <div class="q-tag">#TASK_077</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '19th':</div>
+                <input type="text" id="input_q_77" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_77')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_78" data-type="text" data-answer="the thirteenth" data-locked="false">
+                <div class="q-tag">#TASK_078</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '13th':</div>
+                <input type="text" id="input_q_78" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_78')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_79" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_079</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the fifteenth' có nghĩa là 'thứ mười lăm (ngày 15)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_79" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_79" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_79')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_80" data-type="text" data-answer="biscuit" data-locked="false">
+                <div class="q-tag">#TASK_080</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'bánh quy'</span></div>
+                <input type="text" id="input_q_80" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_80')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_81" data-type="radio" data-answer="mì, bún, phở" data-locked="false">
+                <div class="q-tag">#TASK_081</div>
+                <div class="q-text">Từ <span class='highlight'>'noodles'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_81" value="bánh hamburger"> bánh hamburger</label>
+                    <label class="radio-label"><input type="radio" name="input_q_81" value="mì ý"> mì ý</label>
+                    <label class="radio-label"><input type="radio" name="input_q_81" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_81" value="mì, bún, phở"> mì, bún, phở</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_81')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_82" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_082</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the eighteenth' có nghĩa là 'thứ mười tám (ngày 18)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_82" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_82" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_82')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_83" data-type="radio" data-answer="31st" data-locked="false">
+                <div class="q-tag">#TASK_083</div>
+                <div class="q-text">Dạng viết tắt của 'thứ ba mươi mốt (ngày 31)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_83" value="31st"> 31st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_83" value="31th"> 31th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_83" value="31nd"> 31nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_83" value="31rd"> 31rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_83')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_84" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_084</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the eleventh' có nghĩa là 'thứ mười một (ngày 11)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_84" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_84" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_84')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_85" data-type="text" data-answer="the sixth" data-locked="false">
+                <div class="q-tag">#TASK_085</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '6th':</div>
+                <input type="text" id="input_q_85" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_85')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_86" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_086</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'noodles' dùng để chỉ đồ uống có ga."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_86" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_86" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_86')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_87" data-type="radio" data-answer="22nd" data-locked="false">
+                <div class="q-tag">#TASK_087</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi hai (ngày 22)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_87" value="22nd"> 22nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_87" value="22st"> 22st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_87" value="22th"> 22th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_87" value="22rd"> 22rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_87')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_88" data-type="radio" data-answer="bánh quy" data-locked="false">
+                <div class="q-tag">#TASK_088</div>
+                <div class="q-text">Từ <span class='highlight'>'biscuit'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_88" value="mì, bún, phở"> mì, bún, phở</label>
+                    <label class="radio-label"><input type="radio" name="input_q_88" value="nước táo ép"> nước táo ép</label>
+                    <label class="radio-label"><input type="radio" name="input_q_88" value="bánh quy"> bánh quy</label>
+                    <label class="radio-label"><input type="radio" name="input_q_88" value="kẹo"> kẹo</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_88')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_89" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_089</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the third' có nghĩa là 'thứ ba (ngày 3)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_89" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_89" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_89')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_90" data-type="text" data-answer="pasta" data-locked="false">
+                <div class="q-tag">#TASK_090</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'mì ý'</span></div>
+                <input type="text" id="input_q_90" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_90')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_91" data-type="select" data-answer="the twenty-ninth" data-locked="false">
+                <div class="q-tag">#TASK_091</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi chín (ngày 29)':</div>
+                <select id="input_q_91">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-third">the twenty-third</option>
+                    <option value="the third">the third</option>
+                    <option value="the twenty-ninth">the twenty-ninth</option>
+                    <option value="the thirty-first">the thirty-first</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_91')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_92" data-type="select" data-answer="the thirty-first" data-locked="false">
+                <div class="q-tag">#TASK_092</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ ba mươi mốt (ngày 31)':</div>
+                <select id="input_q_92">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fourteenth">the fourteenth</option>
+                    <option value="the twenty-eighth">the twenty-eighth</option>
+                    <option value="the thirty-first">the thirty-first</option>
+                    <option value="the twenty-ninth">the twenty-ninth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_92')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_93" data-type="radio" data-answer="bánh quy" data-locked="false">
+                <div class="q-tag">#TASK_093</div>
+                <div class="q-text">Từ <span class='highlight'>'cookie'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_93" value="bánh quy"> bánh quy</label>
+                    <label class="radio-label"><input type="radio" name="input_q_93" value="mì ý"> mì ý</label>
+                    <label class="radio-label"><input type="radio" name="input_q_93" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_93" value="nước cam ép"> nước cam ép</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_93')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_94" data-type="select" data-answer="the twelfth" data-locked="false">
+                <div class="q-tag">#TASK_094</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười hai (ngày 12)':</div>
+                <select id="input_q_94">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fourth">the fourth</option>
+                    <option value="the eighth">the eighth</option>
+                    <option value="the twelfth">the twelfth</option>
+                    <option value="the fifteenth">the fifteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_94')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_95" data-type="text" data-answer="the fourteenth" data-locked="false">
+                <div class="q-tag">#TASK_095</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '14th':</div>
+                <input type="text" id="input_q_95" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_95')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_96" data-type="select" data-answer="the twenty-fifth" data-locked="false">
+                <div class="q-tag">#TASK_096</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi lăm (ngày 25)':</div>
+                <select id="input_q_96">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-seventh">the twenty-seventh</option>
+                    <option value="the twenty-fifth">the twenty-fifth</option>
+                    <option value="the twenty-third">the twenty-third</option>
+                    <option value="the eighteenth">the eighteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_96')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_97" data-type="select" data-answer="the thirtieth" data-locked="false">
+                <div class="q-tag">#TASK_097</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ ba mươi (ngày 30)':</div>
+                <select id="input_q_97">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twelfth">the twelfth</option>
+                    <option value="the twenty-ninth">the twenty-ninth</option>
+                    <option value="the tenth">the tenth</option>
+                    <option value="the thirtieth">the thirtieth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_97')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_98" data-type="text" data-answer="orange juice" data-locked="false">
+                <div class="q-tag">#TASK_098</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'nước cam ép'</span></div>
+                <input type="text" id="input_q_98" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_98')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_99" data-type="radio" data-answer="20th" data-locked="false">
+                <div class="q-tag">#TASK_099</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi (ngày 20)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_99" value="20th"> 20th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_99" value="20rd"> 20rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_99" value="20st"> 20st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_99" value="20nd"> 20nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_99')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_100" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_100</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'orange juice' dùng để chỉ loại bánh nướng nhỏ (phổ biến ở Anh)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_100" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_100" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_100')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_101" data-type="text" data-answer="the twenty-ninth" data-locked="false">
+                <div class="q-tag">#TASK_101</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '29th':</div>
+                <input type="text" id="input_q_101" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_101')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_102" data-type="select" data-answer="biscuit" data-locked="false">
+                <div class="q-tag">#TASK_102</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'bánh quy'?</div>
+                <select id="input_q_102">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="candy">candy</option>
+                    <option value="biscuit">biscuit</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="sweet">sweet</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_102')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_103" data-type="radio" data-answer="kẹo" data-locked="false">
+                <div class="q-tag">#TASK_103</div>
+                <div class="q-text">Từ <span class='highlight'>'candy'</span> trong tiếng Việt có nghĩa là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_103" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_103" value="nước ngọt"> nước ngọt</label>
+                    <label class="radio-label"><input type="radio" name="input_q_103" value="kẹo"> kẹo</label>
+                    <label class="radio-label"><input type="radio" name="input_q_103" value="nước cam ép"> nước cam ép</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_103')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_104" data-type="select" data-answer="the fourteenth" data-locked="false">
+                <div class="q-tag">#TASK_104</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười bốn (ngày 14)':</div>
+                <select id="input_q_104">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fourteenth">the fourteenth</option>
+                    <option value="the seventh">the seventh</option>
+                    <option value="the sixteenth">the sixteenth</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_104')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_105" data-type="text" data-answer="the seventeenth" data-locked="false">
+                <div class="q-tag">#TASK_105</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '17th':</div>
+                <input type="text" id="input_q_105" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_105')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_106" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_106</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-first' có nghĩa là 'thứ hai mươi mốt (ngày 21)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_106" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_106" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_106')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_107" data-type="select" data-answer="noodles" data-locked="false">
+                <div class="q-tag">#TASK_107</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'mì, bún, phở'?</div>
+                <select id="input_q_107">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="sweet">sweet</option>
+                    <option value="noodles">noodles</option>
+                    <option value="burger">burger</option>
+                    <option value="biscuit">biscuit</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_107')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_108" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_108</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the thirteenth' có nghĩa là 'thứ mười ba (ngày 13)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_108" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_108" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_108')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_109" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_109</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'coke' dùng để chỉ đồ ăn ngọt (phổ biến ở Mỹ)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_109" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_109" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_109')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_110" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_110</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'sweet' dùng để chỉ đồ ăn ngọt (phổ biến ở Anh)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_110" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_110" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_110')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_111" data-type="select" data-answer="the twenty-sixth" data-locked="false">
+                <div class="q-tag">#TASK_111</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi sáu (ngày 26)':</div>
+                <select id="input_q_111">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-sixth">the twenty-sixth</option>
+                    <option value="the twenty-ninth">the twenty-ninth</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the fourth">the fourth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_111')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_112" data-type="radio" data-answer="19th" data-locked="false">
+                <div class="q-tag">#TASK_112</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười chín (ngày 19)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_112" value="19th"> 19th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_112" value="19st"> 19st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_112" value="19rd"> 19rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_112" value="19nd"> 19nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_112')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_113" data-type="select" data-answer="the seventeenth" data-locked="false">
+                <div class="q-tag">#TASK_113</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười bảy (ngày 17)':</div>
+                <select id="input_q_113">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the ninth">the ninth</option>
+                    <option value="the fifteenth">the fifteenth</option>
+                    <option value="the seventeenth">the seventeenth</option>
+                    <option value="the sixth">the sixth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_113')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_114" data-type="text" data-answer="the twenty-first" data-locked="false">
+                <div class="q-tag">#TASK_114</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '21st':</div>
+                <input type="text" id="input_q_114" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_114')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_115" data-type="text" data-answer="the twentieth" data-locked="false">
+                <div class="q-tag">#TASK_115</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '20th':</div>
+                <input type="text" id="input_q_115" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_115')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_116" data-type="text" data-answer="the twenty-seventh" data-locked="false">
+                <div class="q-tag">#TASK_116</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '27th':</div>
+                <input type="text" id="input_q_116" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_116')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_117" data-type="select" data-answer="pasta" data-locked="false">
+                <div class="q-tag">#TASK_117</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'mì ý'?</div>
+                <select id="input_q_117">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="candy">candy</option>
+                    <option value="pasta">pasta</option>
+                    <option value="sweet">sweet</option>
+                    <option value="orange juice">orange juice</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_117')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_118" data-type="text" data-answer="the sixteenth" data-locked="false">
+                <div class="q-tag">#TASK_118</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '16th':</div>
+                <input type="text" id="input_q_118" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_118')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_119" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_119</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-sixth' có nghĩa là 'thứ hai mươi sáu (ngày 26)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_119" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_119" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_119')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_120" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_120</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the seventeenth' có nghĩa là 'thứ mười bảy (ngày 17)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_120" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_120" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_120')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_121" data-type="select" data-answer="the eleventh" data-locked="false">
+                <div class="q-tag">#TASK_121</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười một (ngày 11)':</div>
+                <select id="input_q_121">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the eleventh">the eleventh</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the twenty-fifth">the twenty-fifth</option>
+                    <option value="the eighteenth">the eighteenth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_121')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_122" data-type="select" data-answer="the tenth" data-locked="false">
+                <div class="q-tag">#TASK_122</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ mười (ngày 10)':</div>
+                <select id="input_q_122">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the eighteenth">the eighteenth</option>
+                    <option value="the tenth">the tenth</option>
+                    <option value="the fifth">the fifth</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_122')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_123" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_123</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-fifth' có nghĩa là 'thứ sáu (ngày 6)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_123" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_123" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_123')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_124" data-type="radio" data-answer="2nd" data-locked="false">
+                <div class="q-tag">#TASK_124</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai (ngày 2)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_124" value="2rd"> 2rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_124" value="2nd"> 2nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_124" value="2th"> 2th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_124" value="2st"> 2st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_124')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_125" data-type="select" data-answer="the twenty-seventh" data-locked="false">
+                <div class="q-tag">#TASK_125</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi bảy (ngày 27)':</div>
+                <select id="input_q_125">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-eighth">the twenty-eighth</option>
+                    <option value="the twenty-seventh">the twenty-seventh</option>
+                    <option value="the twenty-first">the twenty-first</option>
+                    <option value="the ninth">the ninth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_125')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_126" data-type="radio" data-answer="16th" data-locked="false">
+                <div class="q-tag">#TASK_126</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười sáu (ngày 16)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_126" value="16nd"> 16nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_126" value="16rd"> 16rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_126" value="16st"> 16st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_126" value="16th"> 16th</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_126')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_127" data-type="text" data-answer="the ninth" data-locked="false">
+                <div class="q-tag">#TASK_127</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '9th':</div>
+                <input type="text" id="input_q_127" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_127')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_128" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_128</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the thirty-first' có nghĩa là 'thứ hai mươi lăm (ngày 25)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_128" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_128" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_128')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_129" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_129</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-eighth' có nghĩa là 'thứ hai (ngày 2)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_129" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_129" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_129')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_130" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_130</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the nineteenth' có nghĩa là 'thứ mười chín (ngày 19)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_130" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_130" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_130')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_131" data-type="text" data-answer="the second" data-locked="false">
+                <div class="q-tag">#TASK_131</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '2nd':</div>
+                <input type="text" id="input_q_131" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_131')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_132" data-type="radio" data-answer="9th" data-locked="false">
+                <div class="q-tag">#TASK_132</div>
+                <div class="q-text">Dạng viết tắt của 'thứ chín (ngày 9)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_132" value="9nd"> 9nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_132" value="9th"> 9th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_132" value="9rd"> 9rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_132" value="9st"> 9st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_132')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_133" data-type="radio" data-answer="10th" data-locked="false">
+                <div class="q-tag">#TASK_133</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười (ngày 10)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_133" value="10th"> 10th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_133" value="10st"> 10st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_133" value="10nd"> 10nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_133" value="10rd"> 10rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_133')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_134" data-type="select" data-answer="the sixth" data-locked="false">
+                <div class="q-tag">#TASK_134</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ sáu (ngày 6)':</div>
+                <select id="input_q_134">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                    <option value="the thirty-first">the thirty-first</option>
+                    <option value="the first">the first</option>
+                    <option value="the sixth">the sixth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_134')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_135" data-type="select" data-answer="the third" data-locked="false">
+                <div class="q-tag">#TASK_135</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ ba (ngày 3)':</div>
+                <select id="input_q_135">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the thirteenth">the thirteenth</option>
+                    <option value="the sixteenth">the sixteenth</option>
+                    <option value="the third">the third</option>
+                    <option value="the twenty-ninth">the twenty-ninth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_135')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_136" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_136</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the seventh' có nghĩa là 'thứ sáu (ngày 6)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_136" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_136" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_136')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_137" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_137</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-ninth' có nghĩa là 'thứ hai mươi chín (ngày 29)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_137" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_137" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_137')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_138" data-type="radio" data-answer="21st" data-locked="false">
+                <div class="q-tag">#TASK_138</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi mốt (ngày 21)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_138" value="21th"> 21th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_138" value="21nd"> 21nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_138" value="21st"> 21st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_138" value="21rd"> 21rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_138')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_139" data-type="text" data-answer="the first" data-locked="false">
+                <div class="q-tag">#TASK_139</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '1st':</div>
+                <input type="text" id="input_q_139" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_139')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_140" data-type="text" data-answer="the fifth" data-locked="false">
+                <div class="q-tag">#TASK_140</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '5th':</div>
+                <input type="text" id="input_q_140" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_140')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_141" data-type="radio" data-answer="25th" data-locked="false">
+                <div class="q-tag">#TASK_141</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi lăm (ngày 25)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_141" value="25st"> 25st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_141" value="25th"> 25th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_141" value="25nd"> 25nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_141" value="25rd"> 25rd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_141')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_142" data-type="text" data-answer="cookie" data-locked="false">
+                <div class="q-tag">#TASK_142</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'bánh quy'</span></div>
+                <input type="text" id="input_q_142" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_142')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_143" data-type="select" data-answer="the twenty-eighth" data-locked="false">
+                <div class="q-tag">#TASK_143</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi tám (ngày 28)':</div>
+                <select id="input_q_143">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the fifth">the fifth</option>
+                    <option value="the eleventh">the eleventh</option>
+                    <option value="the twenty-eighth">the twenty-eighth</option>
+                    <option value="the twenty-fifth">the twenty-fifth</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_143')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_144" data-type="radio" data-answer="1st" data-locked="false">
+                <div class="q-tag">#TASK_144</div>
+                <div class="q-text">Dạng viết tắt của 'thứ nhất (ngày 1)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_144" value="1th"> 1th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_144" value="1nd"> 1nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_144" value="1rd"> 1rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_144" value="1st"> 1st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_144')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_145" data-type="text" data-answer="the eleventh" data-locked="false">
+                <div class="q-tag">#TASK_145</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '11th':</div>
+                <input type="text" id="input_q_145" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_145')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_146" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_146</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the sixteenth' có nghĩa là 'thứ mười sáu (ngày 16)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_146" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_146" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_146')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_147" data-type="text" data-answer="candy" data-locked="false">
+                <div class="q-tag">#TASK_147</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'kẹo'</span></div>
+                <input type="text" id="input_q_147" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_147')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_148" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_148</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'candy' dùng để chỉ đồ ăn ngọt (phổ biến ở Mỹ)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_148" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_148" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_148')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_149" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_149</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the twenty-second' có nghĩa là 'thứ hai mươi hai (ngày 22)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_149" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_149" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_149')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_150" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_150</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the ninth' có nghĩa là 'thứ ba mươi (ngày 30)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_150" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_150" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_150')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_151" data-type="radio" data-answer="11th" data-locked="false">
+                <div class="q-tag">#TASK_151</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười một (ngày 11)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_151" value="11nd"> 11nd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_151" value="11rd"> 11rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_151" value="11th"> 11th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_151" value="11st"> 11st</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_151')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_152" data-type="select" data-answer="cookie" data-locked="false">
+                <div class="q-tag">#TASK_152</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'bánh quy'?</div>
+                <select id="input_q_152">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="cookie">cookie</option>
+                    <option value="candy">candy</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="biscuit">biscuit</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_152')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_153" data-type="select" data-answer="the twenty-second" data-locked="false">
+                <div class="q-tag">#TASK_153</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ hai mươi hai (ngày 22)':</div>
+                <select id="input_q_153">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the twenty-second">the twenty-second</option>
+                    <option value="the twentieth">the twentieth</option>
+                    <option value="the second">the second</option>
+                    <option value="the third">the third</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_153')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_154" data-type="text" data-answer="the twenty-second" data-locked="false">
+                <div class="q-tag">#TASK_154</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '22nd':</div>
+                <input type="text" id="input_q_154" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_154')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_155" data-type="select" data-answer="apple juice" data-locked="false">
+                <div class="q-tag">#TASK_155</div>
+                <div class="q-text">Món nào sau đây phù hợp với mô tả: 'nước táo ép'?</div>
+                <select id="input_q_155">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="apple juice">apple juice</option>
+                    <option value="orange juice">orange juice</option>
+                    <option value="biscuit">biscuit</option>
+                    <option value="sweet">sweet</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_155')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_156" data-type="text" data-answer="coke" data-locked="false">
+                <div class="q-tag">#TASK_156</div>
+                <div class="q-text">Điền từ tiếng Anh tương ứng với nghĩa: <span class='highlight'>'nước ngọt'</span></div>
+                <input type="text" id="input_q_156" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_156')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_157" data-type="text" data-answer="the twenty-fifth" data-locked="false">
+                <div class="q-tag">#TASK_157</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '25th':</div>
+                <input type="text" id="input_q_157" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_157')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_158" data-type="text" data-answer="the third" data-locked="false">
+                <div class="q-tag">#TASK_158</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '3rd':</div>
+                <input type="text" id="input_q_158" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_158')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_159" data-type="select" data-answer="the seventh" data-locked="false">
+                <div class="q-tag">#TASK_159</div>
+                <div class="q-text">Chọn từ tiếng Anh có nghĩa là 'thứ bảy (ngày 7)':</div>
+                <select id="input_q_159">
+                    <option value="" disabled selected>-- Select an option --</option>
+                    <option value="the first">the first</option>
+                    <option value="the seventh">the seventh</option>
+                    <option value="the twenty-fourth">the twenty-fourth</option>
+                    <option value="the thirty-first">the thirty-first</option>
+                </select>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_159')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_160" data-type="radio" data-answer="ĐÚNG" data-locked="false">
+                <div class="q-tag">#TASK_160</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"'cookie' dùng để chỉ loại bánh nướng nhỏ (phổ biến ở Mỹ)."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_160" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_160" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_160')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_161" data-type="radio" data-answer="27th" data-locked="false">
+                <div class="q-tag">#TASK_161</div>
+                <div class="q-text">Dạng viết tắt của 'thứ hai mươi bảy (ngày 27)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_161" value="27th"> 27th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_161" value="27st"> 27st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_161" value="27rd"> 27rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_161" value="27nd"> 27nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_161')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_162" data-type="radio" data-answer="SAI" data-locked="false">
+                <div class="q-tag">#TASK_162</div>
+                <div class="q-text">Khẳng định sau ĐÚNG hay SAI? <br><span class='highlight'>"Từ 'the sixth' có nghĩa là 'thứ mười chín (ngày 19)'."</span></div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_162" value="ĐÚNG"> ĐÚNG</label>
+                    <label class="radio-label"><input type="radio" name="input_q_162" value="SAI"> SAI</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_162')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_163" data-type="radio" data-answer="18th" data-locked="false">
+                <div class="q-tag">#TASK_163</div>
+                <div class="q-text">Dạng viết tắt của 'thứ mười tám (ngày 18)' là gì?</div>
+                <div class="options-grid">
+                    <label class="radio-label"><input type="radio" name="input_q_163" value="18th"> 18th</label>
+                    <label class="radio-label"><input type="radio" name="input_q_163" value="18rd"> 18rd</label>
+                    <label class="radio-label"><input type="radio" name="input_q_163" value="18st"> 18st</label>
+                    <label class="radio-label"><input type="radio" name="input_q_163" value="18nd"> 18nd</label>
+                </div>
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_163')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <div class="q-card" id="q_164" data-type="text" data-answer="the fourth" data-locked="false">
+                <div class="q-tag">#TASK_164</div>
+                <div class="q-text">Viết đầy đủ bằng chữ (tiếng Anh) cho dạng viết tắt '4th':</div>
+                <input type="text" id="input_q_164" placeholder="> type your answer here_">
+                <div><button type="button" class="btn btn-lock" onclick="lockCard('q_164')">> COMMIT_ANSWER</button></div>
+            </div>
+
+            <button type="button" class="btn btn-submit-main" onclick="compileResults()">
+                > EXECUTE_FINAL_BUILD() & DOWNLOAD_LOGS
+            </button>
+        </form>
+
+        <div class="terminal" id="terminal">
+            <div class="terminal-header">
+                root@eng-server:~# ./compile_results.sh<br>
+                > Compiling... [OK]<br>
+                > Generating logs... [OK]
+            </div>
+            <div id="terminal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_QUESTIONS = document.querySelectorAll('.q-card').length;
+        
+        function lockCard(qId) {
+            const card = document.getElementById(qId);
+            const type = card.getAttribute('data-type');
+            
+            let hasValue = false;
+            
+            if (type === 'radio') {
+                if(card.querySelector('input[type="radio"]:checked')) hasValue = true;
+            } else if (type === 'select') {
+                if(card.querySelector('select').value !== "") hasValue = true;
+            } else {
+                if(card.querySelector('input[type="text"]').value.trim() !== "") hasValue = true;
+            }
+            
+            if (!hasValue) {
+                alert("ERR: Payload missing. Please provide an answer before committing.");
+                return;
+            }
+            
+            // Disable inputs
+            const inputs = card.querySelectorAll('input, select');
+            inputs.forEach(el => el.disabled = true);
+            
+            // UI Updates
+            const btn = card.querySelector('.btn-lock');
+            btn.disabled = true;
+            btn.innerHTML = "> COMMITTED";
+            card.classList.add('locked');
+            card.setAttribute('data-locked', 'true');
+            
+            updateHUD();
+        }
+
+        function updateHUD() {
+            const lockedCount = document.querySelectorAll('.q-card[data-locked="true"]').length;
+            document.getElementById('status-count').innerText = lockedCount;
+            const percentage = (lockedCount / TOTAL_QUESTIONS) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+        }
+
+        function compileResults() {
+            const cards = document.querySelectorAll('.q-card');
+            const lockedCount = document.querySelectorAll('.q-card[data-locked="true"]').length;
+            
+            if (lockedCount < TOTAL_QUESTIONS) {
+                if(!confirm(`WARNING: Only ${lockedCount}/${TOTAL_QUESTIONS} tasks committed. Uncommitted tasks will be evaluated as FALSE. Proceed to compilation?`)) {
+                    return;
+                }
+            }
+            
+            let score = 0;
+            let logText = "=========================================\r\n";
+            logText += " SYSTEM LOG: ENGLISH TEST EVALUATION\r\n";
+            logText += " TIMESTAMP: " + new Date().toISOString() + "\r\n";
+            logText += "=========================================\r\n\r\n";
+            
+            cards.forEach((card, idx) => {
+                const qNum = idx + 1;
+                const type = card.getAttribute('data-type');
+                const rawAns = card.getAttribute('data-answer');
+                // Remove HTML span tags from text for text logging if any
+                const questionText = card.querySelector('.q-text').innerText.replace(/\n/g, " ");
+                
+                let userAns = "";
+                if (type === 'radio') {
+                    const checked = card.querySelector('input[type="radio"]:checked');
+                    userAns = checked ? checked.value.trim() : "[NULL]";
+                } else if (type === 'select') {
+                    const sel = card.querySelector('select').value;
+                    userAns = sel !== "" ? sel.trim() : "[NULL]";
+                } else {
+                    const txt = card.querySelector('input[type="text"]').value.trim();
+                    userAns = txt !== "" ? txt : "[NULL]";
+                }
+                
+                const isCorrect = userAns.toLowerCase() === rawAns.toLowerCase();
+                if (isCorrect) score++;
+                
+                logText += `[TASK_${String(qNum).padStart(3, '0')}] ${questionText}\r\n`;
+                logText += `  > USR_INPUT : ${userAns}\r\n`;
+                logText += `  > SYS_TRUE  : ${rawAns}\r\n`;
+                logText += `  > EVALUATED : ${isCorrect ? "PASS" : "FAIL"}\r\n\r\n`;
+            });
+            
+            const pct = ((score / TOTAL_QUESTIONS) * 100).toFixed(2);
+            logText += `=========================================\r\n`;
+            logText += ` FINAL SCORE : ${score} / ${TOTAL_QUESTIONS}\r\n`;
+            logText += ` ACCURACY    : ${pct}%\r\n`;
+            logText += `=========================================\r\n`;
+            
+            // Download File
+            const blob = new Blob([logText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `eval_log_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Display Terminal UI
+            const term = document.getElementById('terminal');
+            term.style.display = 'block';
+            document.getElementById('terminal-body').innerHTML = `<br>
+                > Fetching results...<br>
+                > Total Tasks : ${TOTAL_QUESTIONS}<br>
+                > Pass Count  : ${score}<br>
+                > Accuracy    : <span style="color: ${pct >= 50 ? '#0f0' : '#f00'}">${pct}%</span><br><br>
+                > BUILD ${pct >= 50 ? 'SUCCESSFUL' : 'FAILED'}. Logs exported to local machine.<br>
+                > _<span style="animation: blink 1s step-end infinite;">&#9608;</span>
+            `;
+            
+            term.scrollIntoView({ behavior: 'smooth' });
+            
+            // Disable main button
+            const mainBtn = document.querySelector('.btn-submit-main');
+            mainBtn.disabled = true;
+            mainBtn.style.backgroundColor = 'var(--border-color)';
+            mainBtn.innerHTML = "> BUILD_COMPLETED";
+        }
+    </script>
+    <style>
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</body>
+</html>
